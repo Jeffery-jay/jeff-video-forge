@@ -1,0 +1,58 @@
+name: Render video
+
+on:
+  push:
+    paths:
+      - 'script.json'
+      - 'render.py'
+      - '.github/workflows/render.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install ffmpeg and Python 3.11
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: python -m pip install --disable-pip-version-check Pillow
+
+      - name: Render video
+        run: python render.py
+
+      - name: Upload final video artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mama-ada-kitchen-video
+          path: output/final.mp4
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Send video to Telegram when configured
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            exit 0
+          fi
+          curl --fail --silent --show-error --max-time 90 \
+            -F chat_id="$TELEGRAM_CHAT_ID" \
+            -F video=@output/final.mp4 \
+            -F caption="Your video is ready for approval." \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVideo"
