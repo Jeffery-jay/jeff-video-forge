@@ -4,7 +4,7 @@ Research date: 2026-10-29
 
 ## Source status
 
-- Google Trends: ok
+- Google Trends: unavailable
 - TikTok Creative Center: best-effort public page fetch; page text may be a JS shell rather than a live trend list.
 - Topics: nigerian food tiktok trend, jollof rice reel, lagos food vendor instagram, food reel hook, amapiano food video
 
@@ -22,46 +22,8 @@ Raw public-source response summary:
     "amapiano food video"
   ],
   "google_trends": {
-    "status": "ok",
-    "batches": [
-      {
-        "topics": [
-          "nigerian food tiktok trend",
-          "jollof rice reel",
-          "lagos food vendor instagram",
-          "food reel hook",
-          "amapiano food video"
-        ],
-        "weekly_interest": {
-          "nigerian food tiktok trend": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "jollof rice reel": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "lagos food vendor instagram": {
-            "latest_interest": 0,
-            "peak_interest": 100,
-            "recent_average": 0.0
-          },
-          "food reel hook": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "amapiano food video": {
-            "latest_interest": 0,
-            "peak_interest": 6,
-            "recent_average": 0.0
-          }
-        },
-        "source": "https://trends.google.com/trends/explore?geo=NG"
-      }
-    ]
+    "status": "unavailable",
+    "detail": "Google Trends request failed: TooManyRequestsError"
   },
   "tiktok_creative_center": [
     {
