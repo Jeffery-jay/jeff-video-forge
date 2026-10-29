@@ -123,7 +123,7 @@ TREND SIGNALS:
 PRIOR WEEK BRIEF:
 {previous[:10000]}
 """
-    endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
     body = json.dumps({"contents": [{"parts": [{"text": prompt}]}],
                        "generationConfig": {"temperature": 0.4, "responseMimeType": "application/json"}}).encode()
     request = Request(endpoint, data=body, headers={"Content-Type": "application/json", "x-goog-api-key": api_key}, method="POST")
