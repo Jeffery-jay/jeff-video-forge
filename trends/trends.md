@@ -86,3 +86,7 @@ Raw public-source response summary:
 4. Build a simple transformation format: ingredients or pan, plated jollof, then a direct Lagos order invitation. Source: the Mama Ada Kitchen brief and topic seeds `jollof rice reel` and `lagos food vendor instagram`.
 
 These are testable creative hypotheses, not verified claims about current viral posts. Configure GEMINI_API_KEY to generate an evidence-aware brief and a draft script.
+
+## Continuity
+
+Last week's brief was read for continuity. No automated comparison was generated in template fallback.
