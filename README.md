@@ -22,7 +22,8 @@ The agent reads `trends/trends.md` as prior-week context, then uses the reposito
 2. Commit changes to `script.json`, `render.py`, fonts, workflow or README to start a render, or open **Actions → Render video → Run workflow**.
 3. When it finishes, download `mama-ada-kitchen-video` from the workflow run to get `output/final.mp4`.
 4. To send videos to Telegram, add repository secrets `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` under **Settings → Secrets and variables → Actions**. If either is missing, delivery is skipped while the artifact is still uploaded.
-5. Telegram delivery includes the title, caption, hashtags and APPROVE/REJECT buttons. The buttons are displayed, but they do not process responses yet; that needs a separate webhook.
-6. Review the video, then post it manually to Instagram with the caption and hashtags from `script.json`.
+5. Review the video, then post it manually to Instagram with the caption and hashtags from `script.json`.
 
-The included example is a Mama Ada Kitchen jollof rice post for Lagos. GitHub Actions availability and usage limits apply to your account.
+## Telegram approval buttons
+
+The APPROVE/REJECT buttons can be connected to a Cloudflare Worker. Follow [SETUP.md](SETUP.md) to deploy the webhook manually. Decision logging to `decisions.json` is optional and requires a GitHub personal access token stored as the Cloudflare Worker secret `GITHUB_TOKEN`; without it, Telegram still updates the message and sends a summary, but no GitHub decision log is written.
