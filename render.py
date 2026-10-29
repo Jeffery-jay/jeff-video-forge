@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
-"""Render script.json as a vertical food reel with optional Pexels footage."""
+"""Render script.json as a vertical food reel with bundled local footage."""
 
 import json
-import math
-import os
 import subprocess
-import urllib.error
-import urllib.parse
-import urllib.request
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -69,55 +64,24 @@ def make_card(scene_text, index, keyword):
     return image
 
 
-def pexels_json(path, query, api_key):
-    url = f"{PEXELS_API}{path}?" + urllib.parse.urlencode({"query": query, "per_page": 8, "orientation": "portrait"})
-    request = urllib.request.Request(url, headers={"Authorization": api_key, "User-Agent": "jeff-video-forge/2.0"})
-    with urllib.request.urlopen(request, timeout=8) as response:
-        return json.load(response)
-
-
-def download(url, destination):
-    request = urllib.request.Request(url, headers={"User-Agent": "jeff-video-forge/2.0"})
-    with urllib.request.urlopen(request, timeout=18) as response, destination.open("wb") as out:
-        total = 0
-        while True:
-            chunk = response.read(1024 * 1024)
-            if not chunk:
-                break
-            total += len(chunk)
-            if total > 35 * 1024 * 1024:
-                raise ValueError("Pexels asset exceeded the 35 MB safety limit")
-            out.write(chunk)
-
-
-def get_pexels_asset(keyword, api_key, work, index):
-    if not api_key:
-        return None
-    query = keyword.strip() or "Nigerian food"
-    try:
-        data = pexels_json("/videos/search", query, api_key)
-        videos = data.get("videos", [])
-        for video in videos:
-            files = [f for f in video.get("video_files", []) if f.get("file_type") == "video/mp4" and f.get("link")]
-            if files:
-                # Prefer a portrait source, otherwise take the largest compact usable file.
-                files.sort(key=lambda f: (abs((f.get("width") or 1) / max(f.get("height") or 1, 1) - 9 / 16), -(f.get("width") or 0)))
-                path = work / f"pexels_{index:03d}.mp4"
-                download(files[0]["link"], path)
-                print(f"Scene {index + 1}: using Pexels video for {query!r}.")
-                return (path, "video")
-        photos = pexels_json("/v1/search", query, api_key).get("photos", [])
-        for photo in photos:
-            src = photo.get("src", {})
-            url = src.get("portrait") or src.get("large2x") or src.get("large")
-            if url:
-                path = work / f"pexels_{index:03d}.jpg"
-                download(url, path)
-                print(f"Scene {index + 1}: using Pexels photo for {query!r}.")
-                return (path, "photo")
-        print(f"Scene {index + 1}: no Pexels video or photo match for {query!r}; using generated card.")
-    except (OSError, ValueError, KeyError, json.JSONDecodeError, urllib.error.URLError) as exc:
-        print(f"Scene {index + 1}: Pexels lookup/download failed ({type(exc).__name__}); using generated card.")
+def local_footage(keyword):
+    """Pick the bundled clip whose filename best matches a scene keyword."""
+    text = (keyword or "").lower().replace("_", "-")
+    footage = ROOT / "footage"
+    # Specific food matches precede generic cooking terms.
+    groups = [
+        ("plantain-frying.mp4", ("plantain", "banana")),
+        ("food-plating.mp4", ("plating", "nigerian food", "food closeup", "serving")),
+        ("grilled-chicken.mp4", ("chicken", "grilled", "fried chicken")),
+        ("rice-cooking.mp4", ("jollof", "rice")),
+        ("simmering-pot.mp4", ("sizzling", "pot", "simmer", "stew")),
+        ("kitchen-cooking.mp4", ("kitchen", "cooking", "ambiance")),
+    ]
+    for filename, terms in groups:
+        if any(term in text for term in terms):
+            path = footage / filename
+            if path.is_file():
+                return path
     return None
 
 
@@ -170,17 +134,17 @@ def main():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     work = OUTPUT / "render_tmp"
     work.mkdir(parents=True, exist_ok=True)
-    api_key = os.environ.get("PEXELS_API_KEY", "").strip()
-    if api_key:
-        print("PEXELS_API_KEY is present; looking for real food footage and photos.")
-    else:
-        print("PEXELS_API_KEY is not set; using generated visual cards. Add the repository secret to enable Pexels.")
+    print("Using bundled local footage when a filename matches the scene keyword; no stock-footage API is used.")
 
     clips = []
     for i, scene in enumerate(scenes):
         text = str(scene["text"]).strip()
         keyword = str(scene.get("image_keyword", "")).strip()
-        asset = get_pexels_asset(keyword, api_key, work, i)
+        asset = local_footage(keyword)
+        if asset:
+            print(f"Scene {i + 1}: using footage/{asset.name} for {keyword!r}.")
+        else:
+            print(f"Scene {i + 1}: no bundled clip matches {keyword!r}; using generated card.")
         overlay_path = work / f"overlay_{i:03d}.png"
         make_caption_overlay(text, i, title, i == 0).save(overlay_path)
         clip_path = work / f"scene_{i:03d}.mp4"
@@ -193,10 +157,8 @@ def main():
             card_path = work / f"placeholder_{i:03d}.png"
             make_card(text, i, keyword).save(card_path)
             inputs = ["-loop", "1", "-framerate", str(FPS), "-i", card_path]
-        elif asset[1] == "photo":
-            inputs = ["-loop", "1", "-framerate", str(FPS), "-i", asset[0]]
         else:
-            inputs = ["-stream_loop", "-1", "-i", asset[0]]
+            inputs = ["-stream_loop", "-1", "-i", asset]
         vf = f"[0:v]{motion}[bg];[bg][1:v]overlay=0:0,format=yuv420p"
         run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-i", overlay_path,
              "-filter_complex", vf, "-t", SCENE_SECONDS, "-r", FPS, "-an", "-c:v", "libx264",

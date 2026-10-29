@@ -1,15 +1,10 @@
 # Mama Ada Kitchen video maker
 
-This free GitHub Actions workflow renders `script.json` as a 9:16 food reel using FFmpeg and Pillow. It uses the open-license Inter font bundled in `fonts/`, animated vertical footage or photos when available, outlined captions, and gentle crossfades. No paid APIs are used. Rendering is configured for `ubuntu-latest` with a five-minute job limit.
+This free GitHub Actions workflow renders `script.json` as a 9:16 food reel using FFmpeg and Pillow. It uses the open-license Inter font bundled in `fonts/`, bundled local stock video clips, outlined captions, Ken Burns motion, and gentle crossfades. Rendering needs no Pexels API key or other footage API.
 
-## Enable real Pexels footage (optional, free)
+## Bundled stock footage
 
-1. Create a free API key at https://www.pexels.com/api/ and follow Pexels' current account and license terms.
-2. In this repository, open **Settings → Secrets and variables → Actions → New repository secret**.
-3. Name it exactly `PEXELS_API_KEY` and paste the key as the secret value. Never commit the key to a file.
-4. Run the workflow. It searches Pexels videos first, then photos, using each scene's `image_keyword`. If the secret is missing, a search has no matches, or a lookup/download fails, the scene uses a clean generated gradient fallback with the same title/caption overlay, so the workflow can still finish.
-
-Pexels results depend on the keyword and API availability. Review the resulting video and the applicable asset licensing before posting.
+Short, compressed food and cooking clips are included in `footage/`, keeping the repository small. `footage/CREDITS.md` records each source URL and its license. The clips are provided under the Pexels License, which permits many free commercial uses but is not CC0; review its restrictions and the clips themselves before publishing. Scenes select local clips by matching `image_keyword` to clip filenames. If a matching file is missing, the renderer falls back to a generated gradient card for that scene.
 
 ## Optional music
 
