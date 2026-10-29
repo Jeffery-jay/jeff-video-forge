@@ -43,16 +43,63 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Send video to Telegram when configured
+      - name: Send rendered video to Telegram
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "Telegram delivery skipped: add TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID repository secrets."
             exit 0
           fi
-          curl --fail --silent --show-error --max-time 90 \
-            -F chat_id="$TELEGRAM_CHAT_ID" \
-            -F video=@output/final.mp4 \
-            -F caption="Your video is ready for approval." \
-            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVideo"
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          import uuid
+
+          with open("script.json", encoding="utf-8") as f:
+              script = json.load(f)
+          hashtags = script.get("hashtags", [])
+          caption = "\n\n".join([
+              script.get("title", ""),
+              script.get("caption", ""),
+              " ".join(hashtags) if isinstance(hashtags, list) else str(hashtags),
+          ])
+          markup = json.dumps({"inline_keyboard": [[
+              {"text": "APPROVE", "callback_data": "approve"},
+              {"text": "REJECT", "callback_data": "reject"},
+          ]]})
+
+          boundary = "----FolkTelegram" + uuid.uuid4().hex
+          parts = []
+          def field(name, value):
+              parts.append((
+                  f"--{boundary}\r\n"
+                  f'Content-Disposition: form-data; name="{name}"\r\n\r\n'
+                  f"{value}\r\n"
+              ).encode())
+          field("chat_id", os.environ["TELEGRAM_CHAT_ID"])
+          field("caption", caption)
+          field("reply_markup", markup)
+          with open("output/final.mp4", "rb") as video:
+              parts.extend([
+                  (f"--{boundary}\r\n"
+                   'Content-Disposition: form-data; name="video"; filename="final.mp4"\r\n'
+                   "Content-Type: video/mp4\r\n\r\n").encode(),
+                  video.read(),
+                  b"\r\n",
+              ])
+          parts.append(f"--{boundary}--\r\n".encode())
+          request = urllib.request.Request(
+              f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendVideo",
+              data=b"".join(parts),
+              headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+              method="POST",
+          )
+          with urllib.request.urlopen(request, timeout=90) as response:
+              result = json.load(response)
+          if not result.get("ok"):
+              raise RuntimeError("Telegram sendVideo returned ok=false")
+          print("Telegram accepted the rendered video.")
+          PY
