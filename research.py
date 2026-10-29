@@ -155,7 +155,12 @@ def validate_script(script):
 def commit_outputs():
     subprocess.run(["git", "config", "user.name", "github-actions[bot]"], check=True, cwd=ROOT)
     subprocess.run(["git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"], check=True, cwd=ROOT)
-    subprocess.run(["git", "add", "-A", "--", "trends/", "draft-script.json"], check=True, cwd=ROOT)
+    subprocess.run(["git", "add", "-A", "--", "trends/"], check=True, cwd=ROOT)
+    draft_path = ROOT / "draft-script.json"
+    if draft_path.exists():
+        subprocess.run(["git", "add", "-A", "--", "draft-script.json"], check=True, cwd=ROOT)
+    else:
+        subprocess.run(["git", "rm", "--cached", "-f", "draft-script.json"], check=False, cwd=ROOT)
     changed = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT)
     if changed.returncode == 0:
         print("No research outputs changed; no commit created.")
