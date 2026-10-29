@@ -10,7 +10,6 @@ on:
       - 'music.mp3'
       - 'MUSIC.md'
       - '.github/workflows/render.yml'
-      - 'README.md'
   workflow_dispatch:
 
 permissions:
