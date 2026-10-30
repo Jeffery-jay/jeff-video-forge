@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
-"""Render script.json as a vertical food reel with bundled local footage."""
+"""Render script.json as a vertical reel using free Openverse footage where available."""
 
+import html
 import json
+import re
 import subprocess
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent
 OUTPUT = ROOT / "output"
-WIDTH, HEIGHT = 1080, 1920
-FPS = 24
-SCENE_SECONDS = 4.0
-CROSSFADE = 0.45
-PEXELS_API = "https://api.pexels.com"
+WIDTH, HEIGHT, FPS = 1080, 1920, 24
+SCENE_SECONDS = 4
+OPENVERSE = "https://api.openverse.org/v1/videos/"
+COMMONS_API = "https://commons.wikimedia.org/w/api.php"
+MAX_DOWNLOAD_BYTES = 100 * 1024 * 1024
+USER_AGENT = "JeffVideoForge/1.0 (free stock video renderer)"
 
 
 def run(args):
@@ -22,16 +29,14 @@ def run(args):
 
 def font(size, bold=False):
     bundled = ROOT / "fonts" / ("Inter-Bold.ttf" if bold else "Inter-Regular.ttf")
-    fallback = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-    for candidate in (bundled, Path(fallback)):
-        if candidate.exists():
-            loaded = ImageFont.truetype(str(candidate), size=size)
-            if bold and hasattr(loaded, "set_variation_by_name"):
-                try:
-                    loaded.set_variation_by_name("Bold")
-                except (OSError, ValueError):
-                    pass
-            return loaded
+    candidates = [bundled]
+    candidates += [Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")]
+    for candidate in candidates:
+        if candidate.is_file():
+            try:
+                return ImageFont.truetype(str(candidate), size=size)
+            except OSError:
+                pass
     return ImageFont.load_default()
 
 
@@ -49,12 +54,11 @@ def wrap_words(draw, text, face, max_width):
     return lines or [""]
 
 
-def make_card(scene_text, index, keyword):
-    """Plain gradient fallback frame when no Pexels asset is available."""
-    seed = sum(ord(ch) for ch in (keyword or scene_text))
+def make_card(text, keyword):
+    """Pillow fallback retained for scenes without downloadable stock footage."""
+    seed = sum(ord(ch) for ch in (keyword or text))
     colors = [(89, 34, 22), (121, 48, 25), (45, 59, 39), (154, 82, 34)]
-    base = colors[seed % len(colors)]
-    image = Image.new("RGB", (WIDTH, HEIGHT), base)
+    image = Image.new("RGB", (WIDTH, HEIGHT), colors[seed % len(colors)])
     draw = ImageDraw.Draw(image, "RGBA")
     for i in range(12):
         x = (seed * (i + 7) * 37) % WIDTH
@@ -64,142 +68,260 @@ def make_card(scene_text, index, keyword):
     return image
 
 
-def local_footage(keyword):
-    """Pick the bundled clip whose filename best matches a scene keyword."""
-    text = (keyword or "").lower().replace("_", "-")
-    footage = ROOT / "footage"
-    # Specific food matches precede generic cooking terms.
-    groups = [
-        ("plantain-frying.mp4", ("plantain", "banana")),
-        ("food-plating.mp4", ("plating", "nigerian food", "food closeup", "serving")),
-        ("grilled-chicken.mp4", ("chicken", "grilled", "fried chicken")),
-        ("rice-cooking.mp4", ("jollof", "rice")),
-        ("simmering-pot.mp4", ("sizzling", "pot", "simmer", "stew")),
-        ("kitchen-cooking.mp4", ("kitchen", "cooking", "ambiance")),
-    ]
-    for filename, terms in groups:
-        if any(term in text for term in terms):
-            path = footage / filename
-            if path.is_file():
-                return path
-    return None
-
-
-def make_caption_overlay(text, index, title, hook):
+def make_caption_overlay(text):
     overlay = Image.new("RGBA", (WIDTH, HEIGHT), (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay)
-    accent = (255, 183, 95, 255)
-    # A compact opening brand lockup and hook headline over the footage.
-    if hook:
-        draw.rounded_rectangle((76, 560, WIDTH-76, 1220), radius=44, fill=(8, 10, 9, 165), outline=(255, 255, 255, 50), width=2)
-        draw.text((130, 620), "MAMA ADA KITCHEN  ·  LAGOS", font=font(30, True), fill=accent)
-        y = 715
-        for line in wrap_words(draw, title, font(66, True), WIDTH - 260)[:3]:
-            draw.text((130, y), line, font=font(66, True), fill="white", stroke_width=2, stroke_fill=(0, 0, 0, 190))
-            y += 88
-    face = font(57, True)
-    lines = wrap_words(draw, text, face, WIDTH - 220)[:3]
-    line_height = 78
-    panel_height = len(lines) * line_height + 76
-    top = 1400 if hook else 1320
-    draw.rounded_rectangle((62, top, WIDTH-62, top + panel_height), radius=34, fill=(0, 0, 0, 170), outline=(255, 255, 255, 60), width=2)
-    y = top + 34
+    face = font(58, True)
+    lines = wrap_words(draw, text, face, WIDTH - 200)[:3]
+    line_height = 82
+    panel_height = len(lines) * line_height + 70
+    top = 1320
+    draw.rounded_rectangle((62, top, WIDTH-62, top+panel_height), radius=34,
+                           fill=(0, 0, 0, 178), outline=(255, 255, 255, 70), width=2)
+    y = top + 30
     for line in lines:
-        draw.text((108, y), line, font=face, fill="white", stroke_width=3, stroke_fill=(0, 0, 0, 255))
+        draw.text((105, y), line, font=face, fill="white", stroke_width=3, stroke_fill=(0, 0, 0, 255))
         y += line_height
     return overlay
 
 
-def stamp(seconds):
-    ms = int(round(seconds * 1000))
-    hh, ms = divmod(ms, 3_600_000)
-    mm, ms = divmod(ms, 60_000)
-    ss, ms = divmod(ms, 1000)
-    return f"{hh:02}:{mm:02}:{ss:02},{ms:03}"
+def simple_keyword(keyword):
+    words = re.findall(r"[a-z0-9]+", keyword.lower())
+    stop = {"the", "and", "with", "from", "into", "over", "under", "while", "scene", "clip", "video", "a", "an", "of", "in", "on", "to", "for"}
+    useful = [word for word in words if word not in stop]
+    return " ".join(useful[:3]) or "people"
+
+
+def openverse_results(query):
+    url = OPENVERSE + "?" + urllib.parse.urlencode({"q": query, "page_size": 8})
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
+    with urllib.request.urlopen(request, timeout=15) as response:
+        payload = json.loads(response.read(2_000_000).decode("utf-8"))
+    return payload.get("results", [])
+
+
+def commons_results(query):
+    params = {
+        "action": "query", "format": "json", "generator": "search",
+        "gsrsearch": f"filetype:video {query}", "gsrnamespace": 6, "gsrlimit": 8,
+        "prop": "imageinfo", "iiprop": "url|extmetadata",
+    }
+    url = COMMONS_API + "?" + urllib.parse.urlencode(params)
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
+    with urllib.request.urlopen(request, timeout=15) as response:
+        payload = json.loads(response.read(2_000_000).decode("utf-8"))
+    results = []
+    for page in payload.get("query", {}).get("pages", {}).values():
+        info = (page.get("imageinfo") or [{}])[0]
+        metadata = info.get("extmetadata", {})
+        def meta(name, default=""):
+            value = metadata.get(name, {})
+            return html.unescape(re.sub(r"<[^>]+>", "", value.get("value", default))) if isinstance(value, dict) else default
+        results.append({
+            "title": page.get("title", "Untitled video"),
+            "url": info.get("url", ""),
+            "source_url": info.get("descriptionurl", ""),
+            "creator": meta("Artist", "Unknown creator"),
+            "license": meta("LicenseShortName", "Unknown license"),
+            "license_version": "",
+            "license_url": meta("LicenseUrl", ""),
+        })
+    return results
+
+
+def download_candidate(result, scene_index, work, query, provider):
+    source = result.get("url") or result.get("download_url")
+    if not source:
+        raise ValueError("result has no video URL")
+    request = urllib.request.Request(source, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(request, timeout=20) as response:
+        content_type = response.headers.get("Content-Type", "").lower()
+        length = response.headers.get("Content-Length")
+        if length and int(length) > MAX_DOWNLOAD_BYTES:
+            raise ValueError("clip exceeds 100 MB download limit")
+        if content_type and not (content_type.startswith("video/") or "octet-stream" in content_type):
+            raise ValueError(f"not a video content type: {content_type}")
+        body = response.read(MAX_DOWNLOAD_BYTES + 1)
+    if len(body) > MAX_DOWNLOAD_BYTES:
+        raise ValueError("clip exceeds 100 MB download limit")
+    path = work / f"source_{scene_index:03d}.bin"
+    path.write_bytes(body)
+    probe = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=codec_type", "-of", "default=noprint_wrappers=1:nokey=1", str(path)], cwd=ROOT, capture_output=True, text=True, timeout=12)
+    if probe.returncode or "video" not in probe.stdout:
+        raise ValueError("download is not a readable video")
+    return path, {
+        "title": result.get("title", "Untitled video"),
+        "creator": result.get("creator", "Unknown creator"),
+        "license": result.get("license", "Unknown license"),
+        "license_version": result.get("license_version", ""),
+        "license_url": result.get("license_url", ""),
+        "source_url": result.get("foreign_landing_url") or result.get("source_url") or source,
+        "query": query,
+        "provider": provider,
+    }
+
+
+def download_openverse(keyword, scene_index, work):
+    """Try Openverse query variants, then Wikimedia Commons, else report card fallback."""
+    queries = [keyword, simple_keyword(keyword)]
+    tried = set()
+    failures = []
+    for query in queries:
+        if not query or query.lower() in tried:
+            continue
+        tried.add(query.lower())
+        try:
+            results = openverse_results(query)
+        except urllib.error.HTTPError as exc:
+            failures.append(f"Openverse {query!r}: HTTP {exc.code}")
+            print(f"Scene {scene_index}: Openverse returned HTTP {exc.code} for {query!r}")
+            time.sleep(0.7)
+            continue
+        except Exception as exc:
+            failures.append(f"Openverse {query!r}: {type(exc).__name__}: {exc}")
+            print(f"Scene {scene_index}: Openverse query failed for {query!r}: {type(exc).__name__}: {exc}")
+            time.sleep(0.7)
+            continue
+        if not results:
+            failures.append(f"Openverse {query!r}: no results")
+        for result in results:
+            try:
+                return (*download_candidate(result, scene_index, work, query, "Openverse"), failures)
+            except Exception as exc:
+                failures.append(f"Openverse download: {type(exc).__name__}: {exc}")
+                print(f"Scene {scene_index}: Openverse clip download failed: {type(exc).__name__}: {exc}")
+        time.sleep(0.7)
+
+    # Openverse's public API may not expose a video index; Commons is a secondary openly licensed source.
+    for query in queries:
+        if not query:
+            continue
+        try:
+            results = commons_results(query)
+        except Exception as exc:
+            failures.append(f"Wikimedia Commons {query!r}: {type(exc).__name__}: {exc}")
+            print(f"Scene {scene_index}: Wikimedia Commons query failed for {query!r}: {type(exc).__name__}: {exc}")
+            time.sleep(0.7)
+            continue
+        if not results:
+            failures.append(f"Wikimedia Commons {query!r}: no results")
+        for result in results:
+            try:
+                return (*download_candidate(result, scene_index, work, query, "Wikimedia Commons"), failures)
+            except Exception as exc:
+                failures.append(f"Wikimedia Commons download: {type(exc).__name__}: {exc}")
+                print(f"Scene {scene_index}: Wikimedia Commons clip download failed: {type(exc).__name__}: {exc}")
+        time.sleep(0.7)
+    return None, None, failures
+
+
+def render_scene(scene, index, work):
+    keyword = str(scene.get("image_keyword", "")).strip()
+    text = str(scene.get("caption_text") or scene.get("text") or "").strip()
+    source_path, attribution, failures = download_openverse(keyword, index + 1, work)
+    clip_path = work / f"scene_{index:03d}.mp4"
+    overlay_path = work / f"overlay_{index:03d}.png"
+    make_caption_overlay(text).save(overlay_path)
+    if source_path is None:
+        print(f"Scene {index + 1}: CARD fallback for {keyword!r}; no stock-video download succeeded.")
+        card_path = work / f"card_{index:03d}.png"
+        make_card(text, keyword).save(card_path)
+        video_input = ["-loop", "1", "-framerate", str(FPS), "-i", str(card_path)]
+    else:
+        print(f"Scene {index + 1}: REAL FOOTAGE ({attribution['provider']}) for {keyword!r}: {attribution['source_url']}")
+        video_input = ["-i", str(source_path)]
+    # Fit and crop to 9:16, then add a restrained zoom. The still-card path gets identical motion.
+    frames = SCENE_SECONDS * FPS
+    filter_graph = (
+        f"[0:v]fps={FPS},scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,"
+        f"crop={WIDTH}:{HEIGHT},zoompan=z='min(zoom+0.00055,1.055)':"
+        f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={WIDTH}x{HEIGHT}:fps={FPS},"
+        f"trim=duration={SCENE_SECONDS},setpts=PTS-STARTPTS,setsar=1[bg];"
+        f"[1:v]format=rgba,fade=t=in:st=0:d=0.22:alpha=1[cap];"
+        f"[bg][cap]overlay=0:0:shortest=1,format=yuv420p[v]"
+    )
+    run(["ffmpeg", "-y", "-loglevel", "error", *video_input, "-loop", "1", "-framerate", str(FPS), "-i", str(overlay_path),
+         "-filter_complex", filter_graph, "-map", "[v]", "-an", "-t", str(SCENE_SECONDS), "-r", str(FPS),
+         "-c:v", "libx264", "-preset", "ultrafast", "-crf", "25", "-threads", "2", "-pix_fmt", "yuv420p", str(clip_path)])
+    return clip_path, attribution, failures
 
 
 def main():
-    data_path = ROOT / "script.json"
-    if not data_path.exists():
+    script_path = ROOT / "script.json"
+    if not script_path.exists():
         raise SystemExit("script.json is missing")
-    data = json.loads(data_path.read_text(encoding="utf-8"))
-    title = str(data.get("title", "Untitled video")).strip() or "Untitled video"
+    data = json.loads(script_path.read_text(encoding="utf-8"))
     scenes = data.get("scenes")
     if not isinstance(scenes, list) or not scenes:
         raise SystemExit("script.json must contain at least one scene")
-    for number, scene in enumerate(scenes, start=1):
+    for number, scene in enumerate(scenes, 1):
         if not isinstance(scene, dict) or not str(scene.get("text", "")).strip():
             raise SystemExit(f"scene {number} needs non-empty text")
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
     work = OUTPUT / "render_tmp"
     work.mkdir(parents=True, exist_ok=True)
-    print("Using bundled local footage when a filename matches the scene keyword; no stock-footage API is used.")
-
-    clips = []
+    clips, attributions, failures_by_scene = [], [], []
     for i, scene in enumerate(scenes):
-        text = str(scene["text"]).strip()
-        keyword = str(scene.get("image_keyword", "")).strip()
-        asset = local_footage(keyword)
-        if asset:
-            print(f"Scene {i + 1}: using footage/{asset.name} for {keyword!r}.")
-        else:
-            print(f"Scene {i + 1}: no bundled clip matches {keyword!r}; using generated card.")
-        overlay_path = work / f"overlay_{i:03d}.png"
-        make_caption_overlay(text, i, title, i == 0).save(overlay_path)
-        clip_path = work / f"scene_{i:03d}.mp4"
-        frames = int(SCENE_SECONDS * FPS)
-        # A subtle, continuously moving zoom/pan makes both real clips and still photos feel alive.
-        motion = (f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,crop={WIDTH}:{HEIGHT},"
-                 f"zoompan=z='min(zoom+0.00065,1.075)':x='iw/2-(iw/zoom/2)+on*0.08':"
-                 f"y='ih/2-(ih/zoom/2)+on*0.03':d=1:s={WIDTH}x{HEIGHT}:fps={FPS},setsar=1")
-        if asset is None:
-            card_path = work / f"placeholder_{i:03d}.png"
-            make_card(text, i, keyword).save(card_path)
-            inputs = ["-loop", "1", "-framerate", str(FPS), "-i", card_path]
-        else:
-            inputs = ["-stream_loop", "-1", "-i", asset]
-        vf = f"[0:v]{motion}[bg];[bg][1:v]overlay=0:0,format=yuv420p"
-        run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-i", overlay_path,
-             "-filter_complex", vf, "-t", SCENE_SECONDS, "-r", FPS, "-an", "-c:v", "libx264",
-             "-preset", "ultrafast", "-crf", "24", "-threads", "2", clip_path])
-        clips.append(clip_path)
+        try:
+            clip, attribution, source_failures = render_scene(scene, i, work)
+            clips.append(clip)
+            attributions.append({"scene": i + 1, "keyword": str(scene.get("image_keyword", "")), "attribution": attribution, "used_card": attribution is None})
+            failures_by_scene.extend({"scene": i + 1, "failure": failure} for failure in source_failures)
+        except Exception as exc:
+            failure = f"Scene render fallback: {type(exc).__name__}: {exc}"
+            failures_by_scene.append({"scene": i + 1, "failure": failure})
+            # A bad source or decoder must not break the whole render. Retry the scene as a Pillow card.
+            print(f"Scene {i + 1}: source/render failure, retrying as card: {type(exc).__name__}: {exc}")
+            card_path = work / f"emergency_card_{i:03d}.png"
+            make_card(str(scene.get("caption_text") or scene["text"]), str(scene.get("image_keyword", ""))).save(card_path)
+            overlay_path = work / f"emergency_overlay_{i:03d}.png"
+            make_caption_overlay(str(scene.get("caption_text") or scene["text"])).save(overlay_path)
+            clip = work / f"scene_{i:03d}.mp4"
+            graph = (f"[0:v]zoompan=z='min(zoom+0.00055,1.055)':d=1:s={WIDTH}x{HEIGHT}:fps={FPS},"
+                     f"trim=duration={SCENE_SECONDS},setpts=PTS-STARTPTS[bg];[1:v]format=rgba,"
+                     f"fade=t=in:st=0:d=0.22:alpha=1[cap];[bg][cap]overlay=0:0,format=yuv420p[v]")
+            run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-framerate", str(FPS), "-i", str(card_path),
+                 "-loop", "1", "-framerate", str(FPS), "-i", str(overlay_path), "-filter_complex", graph,
+                 "-map", "[v]", "-an", "-t", str(SCENE_SECONDS), "-r", str(FPS), "-c:v", "libx264", "-preset", "ultrafast",
+                 "-crf", "25", "-threads", "2", "-pix_fmt", "yuv420p", str(clip)])
+            clips.append(clip)
+            attributions.append({"scene": i + 1, "keyword": str(scene.get("image_keyword", "")), "attribution": None, "used_card": True})
+        time.sleep(0.7)
 
-    duration = len(scenes) * SCENE_SECONDS - max(0, len(scenes) - 1) * CROSSFADE
-    inputs = []
-    for clip in clips:
-        inputs.extend(["-i", clip])
-    chain = "[0:v]"
-    output_label = "0:v"
-    for i in range(1, len(scenes)):
-        out = f"v{i}"
-        offset = i * (SCENE_SECONDS - CROSSFADE)
-        chain += f"[{i}:v]xfade=transition=fade:duration={CROSSFADE}:offset={offset:.3f}[{out}];"
-        output_label = out
-        chain += f"[{out}]" if i < len(scenes) - 1 else ""
-    filter_complex = chain.rstrip(";") + f";[{output_label}]format=yuv420p[vout]"
-    music = ROOT / "music.mp3"
+    # Hard cuts preserve the requested exact 4 seconds per scene and a 60-second 15-scene reel.
+    concat_file = work / "concat.txt"
+    concat_file.write_text("".join(f"file '{clip.as_posix()}'\n" for clip in clips), encoding="utf-8")
+    silent = work / "joined.mp4"
+    run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(concat_file), "-c", "copy", str(silent)])
     final_path = OUTPUT / "final.mp4"
-    if music.exists():
-        inputs.extend(["-stream_loop", "-1", "-i", music])
-        audio_index = len(scenes)
-        audio_filter = f"[{audio_index}:a]atrim=duration={duration:.3f},asetpts=PTS-STARTPTS,volume=0.72,afade=t=out:st={max(0, duration-1.4):.3f}:d={min(1.4, duration):.3f}[aout]"
+    duration = len(scenes) * SCENE_SECONDS
+    music = ROOT / "music.mp3"
+    if music.is_file():
+        audio_input = ["-stream_loop", "-1", "-i", str(music)]
+        audio_filter = f"[1:a]atrim=duration={duration},asetpts=PTS-STARTPTS,volume=0.72,afade=t=out:st={max(0, duration-1.4)}:d=1.4[a]"
         print("Using music.mp3 with an automatic end fade.")
     else:
-        inputs.extend(["-f", "lavfi", "-i", f"sine=frequency=174:sample_rate=44100:duration={duration:.3f}"])
-        audio_index = len(scenes)
-        audio_filter = f"[{audio_index}:a]volume=0.018,afade=t=out:st={max(0, duration-1.4):.3f}:d={min(1.4, duration):.3f}[aout]"
-        print("music.mp3 not found; using a quiet ambient tone, not a music track.")
-    filter_complex += ";" + audio_filter
-    run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", filter_complex,
-         "-map", "[vout]", "-map", "[aout]", "-t", f"{duration:.3f}", "-c:v", "libx264",
-         "-preset", "ultrafast", "-crf", "24", "-threads", "2", "-c:a", "aac", "-b:a", "128k",
-         "-movflags", "+faststart", final_path])
-    run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
-         "stream=width,height", "-of", "csv=s=x:p=0", final_path])
-    print(f"Created {final_path.relative_to(ROOT)} from {len(scenes)} scenes at {WIDTH}x{HEIGHT}.")
+        audio_input = ["-f", "lavfi", "-i", f"sine=frequency=174:sample_rate=44100:duration={duration}"]
+        audio_filter = f"[1:a]volume=0.018,afade=t=out:st={max(0, duration-1.4)}:d=1.4[a]"
+        print("music.mp3 not found; using a quiet ambient tone.")
+    run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(silent), *audio_input, "-filter_complex", audio_filter,
+         "-map", "0:v:0", "-map", "[a]", "-t", str(duration), "-c:v", "copy", "-c:a", "aac", "-b:a", "128k",
+         "-movflags", "+faststart", str(final_path)])
+
+    metadata = OUTPUT / "attributions.json"
+    metadata.write_text(json.dumps({"title": data.get("title", ""), "sources": attributions, "source_failures": failures_by_scene}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    real = sum(not item.get("used_card", False) for item in attributions)
+    cards = len(scenes) - real
+    print(f"Render complete: {real} scenes with real stock footage, {cards} card scenes; {duration}s total.")
+    print(f"Attribution metadata: {metadata.relative_to(ROOT)}")
+    print(f"Source failures logged: {len(failures_by_scene)}")
     print("Hashtags:", " ".join(str(tag) for tag in data.get("hashtags", [])))
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        # Render-level infrastructure errors should be explicit; per-scene network issues are handled above.
+        raise SystemExit(f"Render failed: {type(exc).__name__}: {exc}")
