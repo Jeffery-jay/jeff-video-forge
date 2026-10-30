@@ -6,7 +6,7 @@ Research date: 2026-10-30
 
 - Google Trends: ok
 - TikTok Creative Center: best-effort public page fetch; page text may be a JS shell rather than a live trend list.
-- Topics: nigerian food tiktok trend, jollof rice reel, lagos food vendor instagram, food reel hook, amapiano food video
+- Topics: nigerian comedy skit trend, naija tiktok comedy, lagos comedy skit, african short form comedy, nigerian tiktok sounds comedy
 
 ## Signal notes
 
@@ -15,47 +15,47 @@ Raw public-source response summary:
 {
   "date": "2026-10-30",
   "topics": [
-    "nigerian food tiktok trend",
-    "jollof rice reel",
-    "lagos food vendor instagram",
-    "food reel hook",
-    "amapiano food video"
+    "nigerian comedy skit trend",
+    "naija tiktok comedy",
+    "lagos comedy skit",
+    "african short form comedy",
+    "nigerian tiktok sounds comedy"
   ],
   "google_trends": {
     "status": "ok",
     "batches": [
       {
         "topics": [
-          "nigerian food tiktok trend",
-          "jollof rice reel",
-          "lagos food vendor instagram",
-          "food reel hook",
-          "amapiano food video"
+          "nigerian comedy skit trend",
+          "naija tiktok comedy",
+          "lagos comedy skit",
+          "african short form comedy",
+          "nigerian tiktok sounds comedy"
         ],
         "weekly_interest": {
-          "nigerian food tiktok trend": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "jollof rice reel": {
-            "latest_interest": 0,
-            "peak_interest": 91,
-            "recent_average": 0.0
-          },
-          "lagos food vendor instagram": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "food reel hook": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "amapiano food video": {
+          "nigerian comedy skit trend": {
             "latest_interest": 0,
             "peak_interest": 100,
+            "recent_average": 0.0
+          },
+          "naija tiktok comedy": {
+            "latest_interest": 0,
+            "peak_interest": 0,
+            "recent_average": 0.0
+          },
+          "lagos comedy skit": {
+            "latest_interest": 0,
+            "peak_interest": 95,
+            "recent_average": 0.0
+          },
+          "african short form comedy": {
+            "latest_interest": 0,
+            "peak_interest": 0,
+            "recent_average": 0.0
+          },
+          "nigerian tiktok sounds comedy": {
+            "latest_interest": 0,
+            "peak_interest": 0,
             "recent_average": 0.0
           }
         },
@@ -90,3 +90,7 @@ These are testable creative hypotheses, not verified claims about current viral 
 ## Continuity
 
 Last week's brief was read for continuity. No automated comparison was generated in template fallback.
+
+## Skit selected
+
+Format B: The Fire Payout. Template fallback is a creative draft, not a verified trend claim.
