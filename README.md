@@ -1,29 +1,13 @@
 # Mama Ada Kitchen video maker
 
-This free GitHub Actions workflow renders `script.json` as a 9:16 food reel using FFmpeg and Pillow. It uses the open-license Inter font bundled in `fonts/`, bundled local stock video clips, outlined captions, Ken Burns motion, and gentle crossfades. Rendering needs no Pexels API key or other footage API.
+This free GitHub Actions workflow turns `script.json` into a short vertical video. It searches Openverse for openly licensed video per scene, tries a simplified keyword when needed, then checks Wikimedia Commons before falling back to the original Pillow scene card. FFmpeg crops footage to 9:16, adds subtle zoom motion and animated captions, and writes source, creator and license details to `output/attributions.json`. No API key is needed. Existing `music.mp3` is used when present; otherwise the quiet ambient tone remains.
 
-## Bundled stock footage
+## Make a video
 
-Short, compressed food and cooking clips are included in `footage/`, keeping the repository small. `footage/CREDITS.md` records each source URL and its license. The clips are provided under the Pexels License, which permits many free commercial uses but is not CC0; review its restrictions and the clips themselves before publishing. Scenes select local clips by matching `image_keyword` to clip filenames. If a matching file is missing, the renderer falls back to a generated gradient card for that scene.
+1. Open `script.json` and edit the title, scenes, caption and hashtags. Each scene needs `text` and `image_keyword` fields. Keep the JSON punctuation and quotation marks valid.
+2. Commit your change to the repository. A change to `script.json` automatically starts the render. You can also open the **Actions** tab, choose **Render video**, and select **Run workflow**.
+3. When the run finishes, open it in **Actions** and download the `mama-ada-kitchen-video` artifact. The file is `output/final.mp4`.
+4. To have GitHub send the video to Telegram, add repository secrets named `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in **Settings → Secrets and variables → Actions**. If either secret is missing, Telegram delivery is skipped. The video artifact is still uploaded.
+5. Review the video first. Then post it manually to Instagram and use the caption and hashtags from `script.json`.
 
-## Optional music
-
-Place a track you are licensed to use at the repository root as `music.mp3` and commit it. The render loops/limits it to the video's length and fades the end. Without that file, the renderer uses a quiet generated ambient tone. No music is fetched automatically.
-
-## Weekly trend research
-
-A separate GitHub Actions agent runs every Monday at 07:00 UTC, or manually from **Actions → Weekly trend research → Run workflow**. It checks `topics.json` with Google Trends for Nigeria using `pytrends` and best-effort public TikTok Creative Center hashtag/music pages over plain HTTP. Those pages may return only a JavaScript shell, and the sources do not guarantee complete trend rankings or exact viral metrics.
-
-The agent reads `trends/trends.md` as prior context, then uses the existing Gemini Flash pattern and repository secret `GEMINI_API_KEY` to select one Nigerian/African comedy premise and write a complete Lagos skit. It alternates FORMAT A and FORMAT B by workflow run-number parity, falling back to date parity. The output keeps `title`, scenes with renderer-required `text` and `image_keyword`, `caption`, and `hashtags` compatible with `render.py`, with extra timing, dialogue, speaker, captions, and SFX fields. The brief is saved to `trends/trends-YYYY-MM-DD.md` and `trends/trends.md`; the full draft is saved to `draft-script.json`, never replacing production `script.json` or triggering rendering. Outputs are committed using the GitHub Actions token. Telegram delivery is intentionally skipped. If Gemini is unavailable, a renderer-compatible fallback skit is still written; it is a creative draft, not a verified trend claim.
-
-## Make and receive a video
-
-1. Edit `script.json`; every scene needs `text` and `image_keyword`. Keep JSON syntax valid and use specific visual phrases such as `jollof rice cooking`, `nigerian food closeup`, or `plantain frying`.
-2. Commit changes to `script.json`, `render.py`, fonts, workflow or README to start a render, or open **Actions → Render video → Run workflow**.
-3. When it finishes, download `mama-ada-kitchen-video` from the workflow run to get `output/final.mp4`.
-4. To send videos to Telegram, add repository secrets `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` under **Settings → Secrets and variables → Actions**. If either is missing, delivery is skipped while the artifact is still uploaded.
-5. Review the video, then post it manually to Instagram with the caption and hashtags from `script.json`.
-
-## Telegram approval buttons
-
-The APPROVE/REJECT buttons can be connected to a Cloudflare Worker. Follow [SETUP.md](SETUP.md) to deploy the webhook manually. Decision logging to `decisions.json` is optional and requires a GitHub personal access token stored as the Cloudflare Worker secret `GITHUB_TOKEN`; without it, Telegram still updates the message and sends a summary, but no GitHub decision log is written.
+The included example is a Mama Ada Kitchen jollof rice post for Lagos. The workflow runs on GitHub's `ubuntu-latest` runner and has a five-minute job limit. GitHub's availability and usage limits apply to your account.
