@@ -258,18 +258,25 @@ def main():
     (TRENDS_DIR / "trends.md").write_text(brief.rstrip() + "\n", encoding="utf-8")
     if script is not None:
         (ROOT / "draft-script.json").write_text(json.dumps(script, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        # Production handoff: render.yml triggers on script.json pushes.
+        (ROOT / "script.json").write_text(json.dumps(script, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     else:
         # Do not leave a stale draft that could be mistaken for this week's result.
         stale = ROOT / "draft-script.json"
         if stale.exists():
             stale.unlink()
 
-    summary = (f"Mama Ada Kitchen trend research is ready for review ({TODAY.isoformat()}).\n"
-               f"Trend brief: trends/{daily_path.name}\n"
-               f"Mode: {mode}. {draft_status}\n"
-               "Review the brief and draft in the Jeffery-jay/jeff-video-forge repository before production.")
+    if script is not None:
+        summary = (f"New skit draft: {script['title']} ({TODAY.isoformat()}).\n"
+                   f"Format {script.get('format', '?')}: {script['caption']}\n"
+                   "APPROVE by running the Render video workflow; it posts the rendered video to Telegram.")
+    else:
+        summary = (f"Mama Ada Kitchen trend research is ready for review ({TODAY.isoformat()}).\n"
+                   f"Trend brief: trends/{daily_path.name}\n"
+                   f"Mode: {mode}. {draft_status}")
     commit_outputs()
-    print(f"Research complete. Mode: {mode}. Brief: {daily_path.relative_to(ROOT)}. Draft: {script['title']}. Telegram delivery intentionally skipped.")
+    send_telegram(summary)
+    print(f"Research complete. Mode: {mode}. Brief: {daily_path.relative_to(ROOT)}. Draft: {script['title'] if script else 'none'}.")
 
 
 if __name__ == "__main__":
