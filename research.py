@@ -231,8 +231,14 @@ PRIOR WEEK BRIEF:
                       headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}, method="POST")
     with urlopen(request, timeout=120) as response:
         result = json.load(response)
-    text = result["choices"][0]["message"]["content"]
-    parsed = json.loads(text)
+    text = result["choices"][0]["message"]["content"].strip()
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError:
+        start, end = text.find("{"), text.rfind("}")
+        if start == -1 or end <= start:
+            raise ValueError("OpenRouter returned no JSON object")
+        parsed = json.loads(text[start:end + 1])
     brief, script = parsed.get("trend_brief"), parsed.get("draft_script")
     if not isinstance(brief, str) or not isinstance(script, dict):
         raise ValueError("OpenRouter returned an incomplete brief or script")
