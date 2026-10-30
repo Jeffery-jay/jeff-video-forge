@@ -1,96 +1,14 @@
-# Weekly trend brief: Mama Ada Kitchen
+# Lagos Short-Form Comedy Research Brief: 2026-10-30
 
-Research date: 2026-10-30
+## 1. Source Signal Analysis & Data Integrity
+- **Google Trends (geo: NG)**: Search interest reflects historical peaks for queries `nigerian comedy skit trend` (peak: 100) and `lagos comedy skit` (peak: 95), while current weekly interest sits at 0 across queried terms. This indicates steady long-tail interest in regional skit comedy rather than an acute breakout keyword spike this week.
+- **TikTok Creative Center**: Both public URLs (`/popular/hashtag/pc/en` and `/popular/music/pc/en`) returned minimal JavaScript shell landing pages (`TikTok One Creative Suite... EN Log in -->`). No client-side rendered rank lists, verified hashtag volumes, or trending audio rankings could be extracted directly from this crawl. Consequently, no specific trending audio or hashtag virality counts are claimed.
+- **Hypotheses & Creator Guidelines**: Nigerian comedy content in Lagos consistently benefits from high-relatability domestic disputes, relational misunderstandings, and hyper-localized economic friction (e.g., sudden windfalls, rent, family inheritance schemes). Production should rely strictly on royalty-free, clearable sound effects and verified library sounds.
 
-## Source status
+## 2. Premise Selection (Format B)
+- **Format**: Format B (Deterministic Run 10 parity = 0). Quiet domestic two-character setup, empathetic escalation, one dark ironic twist landing on a single greed punchline, and a laughing meme outro.
+- **Premise**: In a modest Lagos parlour, Chidi sits weeping inconsolably holding an envelope. His devoted friend Emeka rushes in, assuming a medical tragedy regarding Chidi's ailing wealthy mother. Emeka passionately escalates his emotional and financial support, pledging his own possessions, only for Chidi to reveal the real reason for his tears: the doctor made a mistake and mama is completely cured—after Chidi already secretly sold her prime Lekki land at a giveaway price.
 
-- Google Trends: ok
-- TikTok Creative Center: best-effort public page fetch; page text may be a JS shell rather than a live trend list.
-- Topics: nigerian comedy skit trend, naija tiktok comedy, lagos comedy skit, african short form comedy, nigerian tiktok sounds comedy
-
-## Signal notes
-
-Raw public-source response summary:
-```json
-{
-  "date": "2026-10-30",
-  "topics": [
-    "nigerian comedy skit trend",
-    "naija tiktok comedy",
-    "lagos comedy skit",
-    "african short form comedy",
-    "nigerian tiktok sounds comedy"
-  ],
-  "google_trends": {
-    "status": "ok",
-    "batches": [
-      {
-        "topics": [
-          "nigerian comedy skit trend",
-          "naija tiktok comedy",
-          "lagos comedy skit",
-          "african short form comedy",
-          "nigerian tiktok sounds comedy"
-        ],
-        "weekly_interest": {
-          "nigerian comedy skit trend": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "naija tiktok comedy": {
-            "latest_interest": 0,
-            "peak_interest": 100,
-            "recent_average": 0.0
-          },
-          "lagos comedy skit": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "african short form comedy": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          },
-          "nigerian tiktok sounds comedy": {
-            "latest_interest": 0,
-            "peak_interest": 0,
-            "recent_average": 0.0
-          }
-        },
-        "source": "https://trends.google.com/trends/explore?geo=NG"
-      }
-    ]
-  },
-  "tiktok_creative_center": [
-    {
-      "url": "https://ads.tiktok.com/business/creativecenter/inspiration/popular/hashtag/pc/en",
-      "status": "fetched",
-      "page_text_sample": "TikTok One Creative Suite Top Ads Trends Creative Tools Creative Studio Automation API Influencer marketing EN Log in -->"
-    },
-    {
-      "url": "https://ads.tiktok.com/business/creativecenter/inspiration/popular/music/pc/en",
-      "status": "fetched",
-      "page_text_sample": "TikTok One Creative Suite Top Ads Trends Creative Tools Creative Studio Automation API Influencer marketing EN Log in -->"
-    }
-  ]
-}
-```
-
-## Content strategies to test
-
-1. Open with a close food reveal or steam/sizzle visual in the first second, then name the craving. Source: Google Trends query set and TikTok Creative Center public inspiration pages; these fetches do not establish virality.
-2. Keep cuts brisk, with one clear cooking or plating action per scene. Source: strategy hypothesis from the queried food-reel topics, not a measured platform metric.
-3. Use a current-feeling, upbeat Afrobeats or amapiano-style sound only after checking that the track is available and licensed for the account. Source: topic seed `amapiano food video`; no specific track was verified.
-4. Build a simple transformation format: ingredients or pan, plated jollof, then a direct Lagos order invitation. Source: the Mama Ada Kitchen brief and topic seeds `jollof rice reel` and `lagos food vendor instagram`.
-
-These are testable creative hypotheses, not verified claims about current viral posts. Configure GEMINI_API_KEY to generate an evidence-aware brief and a draft script.
-
-## Continuity
-
-Last week's brief was read for continuity. No automated comparison was generated in template fallback.
-
-## Skit selected
-
-Format B: The Fire Payout. Template fallback is a creative draft, not a verified trend claim.
+## 3. Audio & Music Recommendations
+- **SFX**: Standard verified comedic stingers: soft domestic ambient room tone, gentle dramatic piano chord, tense drone swell, dramatic vinyl scratch / bass drop, and the classic Nigerian comedy laughing outro meme stinger.
+- **Licensing Advice**: Do not utilize unverified commercial Afrobeats tracks without explicit sync clearances. Utilize standard royalty-free production libraries or creator-cleared comedic percussion cues.

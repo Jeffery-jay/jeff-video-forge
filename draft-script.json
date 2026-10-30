@@ -1,155 +1,161 @@
 {
-  "title": "The Fire Payout",
-  "hook": "Babe, the fire don finish. I thank God say you survive.",
-  "format": "B",
+  "title": "The False Alarm Land Deal",
+  "format": "FORMAT B",
   "duration_seconds": 60,
+  "hook": "Why are you crying like the world has ended?!",
   "characters": [
-    "wife",
-    "husband"
+    {
+      "name": "Chidi",
+      "description": "Sitting on sofa in a singlet, clutching an envelope, crying uncontrollably."
+    },
+    {
+      "name": "Emeka",
+      "description": "Chidi's loyal, deeply empathetic childhood friend."
+    }
   ],
   "scenes": [
     {
-      "text": "Babe, the fire don finish. I thank God say you survive.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:00-00:00:04",
-      "speaker": "WIFE",
-      "dialogue": "Babe, the fire don finish. I thank God say you survive.",
-      "caption_text": "Babe, the fire don finish. I thank God say you survive.",
-      "sfx": "distant siren"
+      "timing": "00:00 - 00:04",
+      "speaker": "Emeka",
+      "dialogue": "Chidi! Wetin happen? Why you dey cry like person wey world crash on top him head?!",
+      "caption_text": "Emeka rushes into the parlour alarmed",
+      "sfx": "Muffled crying with gentle domestic parlour ambiance",
+      "image_keyword": "worried man entering lagos parlour",
+      "text": "Emeka enters the parlour finding Chidi weeping into his palms."
     },
     {
-      "text": "Na God save me. I think say everything don burn.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:04-00:00:08",
-      "speaker": "HUSBAND",
-      "dialogue": "Na God save me. I think say everything don burn.",
-      "caption_text": "Na God save me. I think say everything don burn.",
-      "sfx": "cough"
+      "timing": "00:04 - 00:08",
+      "speaker": "Chidi",
+      "dialogue": "Emeka... life is wicked! Just look at this letter from the general hospital!",
+      "caption_text": "Chidi waves a crumpled clinic letter",
+      "sfx": "Soft dramatic piano chord",
+      "image_keyword": "man holding medical envelope weeping",
+      "text": "Chidi points with shaking hands at a crumpled hospital diagnostic envelope on the table."
     },
     {
-      "text": "Forget the chair and TV. You dey okay?",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:08-00:00:12",
-      "speaker": "WIFE",
-      "dialogue": "Forget the chair and TV. You dey okay?",
-      "caption_text": "Forget the chair and TV. You dey okay?",
-      "sfx": "soft piano"
+      "timing": "00:08 - 00:12",
+      "speaker": "Emeka",
+      "dialogue": "God forbid! Don't tell me Mama's illness has reached the final stage!",
+      "caption_text": "Emeka gasps and holds his chest",
+      "sfx": "Tense low synth pad",
+      "image_keyword": "man with hand on chest in shock",
+      "text": "Emeka clasps his chest in utter panic fearing the worst for Chidi's mother."
     },
     {
-      "text": "I dey. Na only my slippers and phone remain.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:12-00:00:16",
-      "speaker": "HUSBAND",
-      "dialogue": "I dey. Na only my slippers and phone remain.",
-      "caption_text": "I dey. Na only my slippers and phone remain.",
-      "sfx": "sigh"
+      "timing": "00:12 - 00:16",
+      "speaker": "Chidi",
+      "dialogue": "The doctor called me inside office this morning... he said the laboratory test came out!",
+      "caption_text": "Chidi sobs loudly into his shirt",
+      "sfx": "Melodramatic violin swell",
+      "image_keyword": "crying man wiped tears singlet",
+      "text": "Chidi wipes his tear-stained face with the hem of his faded singlet."
     },
     {
-      "text": "Thank God. I was shaking when I hear the news.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:16-00:00:20",
-      "speaker": "WIFE",
-      "dialogue": "Thank God. I was shaking when I hear the news.",
-      "caption_text": "Thank God. I was shaking when I hear the news.",
-      "sfx": "quiet crying"
+      "timing": "00:16 - 00:20",
+      "speaker": "Emeka",
+      "dialogue": "Calm down my brother! No matter how bad the diagnosis is, we go survive am together!",
+      "caption_text": "Emeka kneels beside Chidi on the rug",
+      "sfx": "Warm, emotional piano swell",
+      "image_keyword": "friend comforting weeping man",
+      "text": "Emeka kneels directly beside the sofa, gripping Chidi's shoulders reassuringly."
     },
     {
-      "text": "You still come back for me, my love.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:20-00:00:24",
-      "speaker": "HUSBAND",
-      "dialogue": "You still come back for me, my love.",
-      "caption_text": "You still come back for me, my love.",
-      "sfx": "warm music"
+      "timing": "00:20 - 00:24",
+      "speaker": "Chidi",
+      "dialogue": "You don't understand, Emeka... the matter pass my power! Everything scatter completely!",
+      "caption_text": "Chidi buries his face in his palms",
+      "sfx": "Heavy depressed sigh sound",
+      "image_keyword": "despairing man head in hands",
+      "text": "Chidi rocks back and forth on the couch shaking his head in misery."
     },
     {
-      "text": "Of course. You are more important than property.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:24-00:00:28",
-      "speaker": "WIFE",
-      "dialogue": "Of course. You are more important than property.",
-      "caption_text": "Of course. You are more important than property.",
-      "sfx": "gentle gasp"
+      "timing": "00:24 - 00:28",
+      "speaker": "Emeka",
+      "dialogue": "Listen to me! If Mama needs urgent surgery abroad, I go sell my Toyota Corolla today!",
+      "caption_text": "Emeka offers his car without hesitation",
+      "sfx": "Inspirational brass swell",
+      "image_keyword": "earnest friend pledging support",
+      "text": "Emeka looks directly into Chidi's eyes, offering supreme personal sacrifice."
     },
     {
-      "text": "I knew you loved me pass money matter.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:28-00:00:32",
-      "speaker": "HUSBAND",
-      "dialogue": "I knew you loved me pass money matter.",
-      "caption_text": "I knew you loved me pass money matter.",
-      "sfx": "soft laugh"
+      "timing": "00:28 - 00:32",
+      "speaker": "Chidi",
+      "dialogue": "Emeka, your car money cannot solve this disaster wey enter my hand now!",
+      "caption_text": "Chidi continues wailing bitterly",
+      "sfx": "Exaggerated comedy sob",
+      "image_keyword": "grief stricken man crying loudly",
+      "text": "Chidi ignores the generosity, staring into space with profound dread."
     },
     {
-      "text": "Insurance says each family gets ten million. You collect?",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:32-00:00:36",
-      "speaker": "WIFE",
-      "dialogue": "Insurance says each family gets ten million. You collect?",
-      "caption_text": "Insurance says each family gets ten million. You collect?",
-      "sfx": "record scratch"
+      "timing": "00:32 - 00:36",
+      "speaker": "Emeka",
+      "dialogue": "Then I will sell my shop in Alaba! Even my flat-screen TV and generator, take everything!",
+      "caption_text": "Emeka escalates his loyalty pledge",
+      "sfx": "High emotional cinematic strings",
+      "image_keyword": "man gesturing passionately empathy",
+      "text": "Emeka passionately raises both hands, completely dedicated to saving his friend's family."
     },
     {
-      "text": "Ten million? I never hear anything like that.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:36-00:00:40",
-      "speaker": "HUSBAND",
-      "dialogue": "Ten million? I never hear anything like that.",
-      "caption_text": "Ten million? I never hear anything like that.",
-      "sfx": "gasp"
+      "timing": "00:36 - 00:40",
+      "speaker": "Emeka",
+      "dialogue": "So talk to me! What did the Chief Doctor say about Mama's remaining days?!",
+      "caption_text": "Emeka urgently demands the medical truth",
+      "sfx": "Heartbeat thumping tension sound",
+      "image_keyword": "intense close up questioning face",
+      "text": "Emeka grabs the envelope firmly to inspect the dreaded doctor's report."
     },
     {
-      "text": "You survived and still missed the payout?",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:40-00:00:44",
-      "speaker": "WIFE",
-      "dialogue": "You survived and still missed the payout?",
-      "caption_text": "You survived and still missed the payout?",
-      "sfx": "dramatic sting"
+      "timing": "00:40 - 00:44",
+      "speaker": "Chidi",
+      "dialogue": "The doctor said it was a computer error! Mama is hundred percent healthy!",
+      "caption_text": "Chidi confesses the clinic's update",
+      "sfx": "Sudden comedic record scratch",
+      "image_keyword": "puzzled man holding letter open",
+      "text": "Chidi sniffs loudly and reveals the test was completely negative."
     },
     {
-      "text": "I was busy trying to stay alive!",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:44-00:00:48",
-      "speaker": "HUSBAND",
-      "dialogue": "I was busy trying to stay alive!",
-      "caption_text": "I was busy trying to stay alive!",
-      "sfx": "cough"
+      "timing": "00:44 - 00:48",
+      "speaker": "Emeka",
+      "dialogue": "Wait... Mama is completely fine?! Then why the hell are you crying like a madman?!",
+      "caption_text": "Emeka stares in complete bewilderment",
+      "sfx": "Awkward crickets chirping",
+      "image_keyword": "confused staring friend eyebrows raised",
+      "text": "Emeka blinks in disbelief, completely stunned that good news produced intense sorrow."
     },
     {
-      "text": "Next time, read the policy before you run out!",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:48-00:00:52",
-      "speaker": "WIFE",
-      "dialogue": "Next time, read the policy before you run out!",
-      "caption_text": "Next time, read the policy before you run out!",
-      "sfx": "record scratch"
+      "timing": "00:48 - 00:52",
+      "speaker": "Chidi",
+      "dialogue": "Because last week when doctor said she had two days left...",
+      "caption_text": "Chidi begins whispering in shame",
+      "sfx": "Suspenseful comedic bass drone",
+      "image_keyword": "guilty looking man biting lip",
+      "text": "Chidi looks around nervously as his tears turn into sheer panic."
     },
     {
-      "text": "Next time? You want another fire?",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:52-00:00:56",
-      "speaker": "HUSBAND",
-      "dialogue": "Next time? You want another fire?",
-      "caption_text": "Next time? You want another fire?",
-      "sfx": "nervous laugh"
+      "timing": "00:52 - 00:56",
+      "speaker": "Chidi",
+      "dialogue": "I already sold her two plots of land in Lekki to Alhaji for half price without her knowing!",
+      "caption_text": "Chidi drops the greedy truth",
+      "sfx": "Loud dramatic thud impact sound",
+      "image_keyword": "wide eyed shocked betrayal reaction",
+      "text": "Emeka drops the letter as Chidi buries his face in regretful greed."
     },
     {
-      "text": "No. I want you to read the small print, my dear.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:56-00:01:00",
-      "speaker": "WIFE",
-      "dialogue": "No. I want you to read the small print, my dear.",
-      "caption_text": "No. I want you to read the small print, my dear.",
-      "sfx": "laugh track"
+      "timing": "00:56 - 01:00",
+      "speaker": "Emeka",
+      "dialogue": "Yeee! So you don inherit your living mother! Police will not even save you today!",
+      "caption_text": "Emeka backs away slowly in horror",
+      "sfx": "Iconic Nigerian laughing meme sound effect outro",
+      "image_keyword": "friend running away laughing meme pose",
+      "text": "Emeka grabs his shoes and sprints out of the parlour while the laughing meme track blares."
     }
   ],
-  "caption": "Love is patient. But did you read the insurance policy? 😂",
+  "caption": "When empathy meets pure Lagos greed! Emeka was ready to sell his generator not knowing Chidi had already sold Mama's future. 😭😂",
   "hashtags": [
-    "#NaijaComedy",
-    "#LagosSkit",
-    "#NigerianTikTok",
+    "#LagosComedy",
     "#NaijaSkit",
-    "#ComedySkits"
+    "#FormatB",
+    "#ComedyRelatable",
+    "#GreedGoneWrong"
   ]
 }
