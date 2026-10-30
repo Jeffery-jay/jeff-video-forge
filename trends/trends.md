@@ -1,6 +1,6 @@
 # Weekly trend brief: Mama Ada Kitchen
 
-Research date: 2026-10-29
+Research date: 2026-10-30
 
 ## Source status
 
@@ -13,7 +13,7 @@ Research date: 2026-10-29
 Raw public-source response summary:
 ```json
 {
-  "date": "2026-10-29",
+  "date": "2026-10-30",
   "topics": [
     "nigerian food tiktok trend",
     "jollof rice reel",
@@ -40,12 +40,12 @@ Raw public-source response summary:
           },
           "jollof rice reel": {
             "latest_interest": 0,
-            "peak_interest": 0,
+            "peak_interest": 91,
             "recent_average": 0.0
           },
           "lagos food vendor instagram": {
             "latest_interest": 0,
-            "peak_interest": 100,
+            "peak_interest": 0,
             "recent_average": 0.0
           },
           "food reel hook": {
@@ -55,7 +55,7 @@ Raw public-source response summary:
           },
           "amapiano food video": {
             "latest_interest": 0,
-            "peak_interest": 6,
+            "peak_interest": 100,
             "recent_average": 0.0
           }
         },
