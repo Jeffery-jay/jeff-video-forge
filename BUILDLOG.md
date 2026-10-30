@@ -1,4 +1,5 @@
 # Build log
 
 ## 2026-10-30
+- Replaced the renderer's local-only clip matching with free stock-video searches: Openverse first, a simplified keyword retry next, and Wikimedia Commons as a secondary openly licensed source. Scene rendering keeps the Pillow card fallback for individual misses or decode failures, logs footage/card counts and source failures, adds animated caption overlays over vertical Ken Burns footage, records source and CC/license credits in `output/attributions.json`, and retains the existing music/ambient-tone behavior and `output/final.mp4` path. Left the Telegram workflow sendVideo step unchanged. Smoke-tested the card fallback locally; live Openverse video search returned HTTP 404 in this environment, so the Commons fallback will be exercised by the workflow.
 - Upgraded weekly trend research from food-video ideas to complete Nigerian short-form comedy skits. Added Naija comedy theme/sound queries, deterministic FORMAT A/B alternation, renderer-compatible draft-script.json with timing, dialogue, captions, and SFX, and a no-Telegram execution path. Preserved workflow name, triggers, and script.json production handoff.
