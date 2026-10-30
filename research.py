@@ -219,10 +219,10 @@ Return ONLY valid JSON with exactly root keys trend_brief (Markdown) and draft_s
 
 TODAY: {TODAY.isoformat()}
 REQUIRED FORMAT: {format_name}
-TREND SIGNALS:
-{json.dumps(signals, ensure_ascii=False)}
-PRIOR WEEK BRIEF:
-{previous[:10000]}
+TREND SIGNALS (summary):
+{json.dumps({"date": signals.get("date"), "topics": signals.get("topics"), "google_trends_status": signals.get("google_trends", {}).get("status")}, ensure_ascii=False)}
+PRIOR WEEK BRIEF (first 3000 chars):
+{previous[:3000]}
 """
     body = json.dumps({"model": "nvidia/nemotron-3-ultra-550b-a55b:free",
                        "messages": [{"role": "user", "content": prompt}],
@@ -316,7 +316,7 @@ def main():
                     mode = "OpenRouter fallback"
                     draft_status = "Draft script generated with OpenRouter after Gemini failed."
                 except Exception as exc2:
-                    print(f"OpenRouter fallback failed: {type(exc2).__name__}; using template fallback.", file=sys.stderr)
+                    print(f"OpenRouter fallback failed: {type(exc2).__name__}: {exc2}; using template fallback.", file=sys.stderr)
                     brief, script = template_brief(signals, previous)
                     mode = "template fallback"
                     draft_status = "Draft script skipped because Gemini and OpenRouter both failed."
