@@ -35,17 +35,17 @@ Raw public-source response summary:
         "weekly_interest": {
           "nigerian comedy skit trend": {
             "latest_interest": 0,
-            "peak_interest": 0,
+            "peak_interest": 100,
             "recent_average": 0.0
           },
           "naija tiktok comedy": {
             "latest_interest": 0,
-            "peak_interest": 100,
+            "peak_interest": 0,
             "recent_average": 0.0
           },
           "lagos comedy skit": {
             "latest_interest": 0,
-            "peak_interest": 0,
+            "peak_interest": 95,
             "recent_average": 0.0
           },
           "african short form comedy": {
