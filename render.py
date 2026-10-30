@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render script.json as a vertical reel using free Openverse footage where available."""
+"""Render script.json as a vertical reel using Wikimedia Commons footage where available."""
 
 import html
 import json
@@ -17,10 +17,28 @@ ROOT = Path(__file__).resolve().parent
 OUTPUT = ROOT / "output"
 WIDTH, HEIGHT, FPS = 1080, 1920, 24
 SCENE_SECONDS = 4
-OPENVERSE = "https://api.openverse.org/v1/videos/"
 COMMONS_API = "https://commons.wikimedia.org/w/api.php"
-MAX_DOWNLOAD_BYTES = 100 * 1024 * 1024
-USER_AGENT = "JeffVideoForge/1.0 (free stock video renderer)"
+MAX_DOWNLOAD_BYTES = 40 * 1024 * 1024
+# Wikimedia asks API clients to identify their app and provide a contact/project URL.
+USER_AGENT = "JeffVideoForge/1.1 (https://github.com/Jeffery-jay/jeff-video-forge; automated video rendering) Python/3.11"
+REQUEST_DELAY_SECONDS = 1.2
+_last_request_at = 0.0
+
+
+def polite_request(url, timeout=20, max_bytes=2_000_000):
+    """Issue a Wikimedia request with a descriptive UA and a 1.2s minimum gap."""
+    global _last_request_at
+    wait = REQUEST_DELAY_SECONDS - (time.monotonic() - _last_request_at)
+    if wait > 0:
+        time.sleep(wait)
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
+    try:
+        response = urllib.request.urlopen(request, timeout=timeout)
+        _last_request_at = time.monotonic()
+        return response
+    except Exception:
+        _last_request_at = time.monotonic()
+        raise
 
 
 def run(args):
@@ -92,41 +110,100 @@ def simple_keyword(keyword):
     return " ".join(useful[:3]) or "people"
 
 
-def openverse_results(query):
-    url = OPENVERSE + "?" + urllib.parse.urlencode({"q": query, "page_size": 8})
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
-    with urllib.request.urlopen(request, timeout=15) as response:
-        payload = json.loads(response.read(2_000_000).decode("utf-8"))
-    return payload.get("results", [])
-
-
 def commons_results(query):
+    """Search Commons for video MIME types, attach metadata and rank relevant small files."""
     params = {
         "action": "query", "format": "json", "generator": "search",
-        "gsrsearch": f"filetype:video {query}", "gsrnamespace": 6, "gsrlimit": 8,
-        "prop": "imageinfo", "iiprop": "url|extmetadata",
+        "gsrsearch": f"filetype:video filemime:video {query}", "gsrnamespace": 6, "gsrlimit": 30,
+        "prop": "imageinfo", "iiprop": "url|size|mime|extmetadata",
     }
     url = COMMONS_API + "?" + urllib.parse.urlencode(params)
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
-    with urllib.request.urlopen(request, timeout=15) as response:
+    with polite_request(url, timeout=20) as response:
         payload = json.loads(response.read(2_000_000).decode("utf-8"))
     results = []
+    terms = set(re.findall(r"[a-z0-9]+", query.lower()))
+    generic = {"man", "woman", "person", "people", "video", "footage", "stock", "clip", "scene"}
+    terms -= generic
+    if not terms:
+        terms = set(re.findall(r"[a-z0-9]+", query.lower()))
     for page in payload.get("query", {}).get("pages", {}).values():
         info = (page.get("imageinfo") or [{}])[0]
+        mime = str(info.get("mime", "")).lower()
+        size = int(info.get("size", 0) or 0)
+        if not mime.startswith("video/") or not info.get("url") or not size or size > MAX_DOWNLOAD_BYTES:
+            continue
         metadata = info.get("extmetadata", {})
         def meta(name, default=""):
             value = metadata.get(name, {})
             return html.unescape(re.sub(r"<[^>]+>", "", value.get("value", default))) if isinstance(value, dict) else default
+        title = page.get("title", "Untitled video")
+        details = " ".join((title, meta("ImageDescription"), meta("ObjectName"))).lower()
+        overlap = sum(1 for term in terms if term in details)
         results.append({
-            "title": page.get("title", "Untitled video"),
-            "url": info.get("url", ""),
-            "source_url": info.get("descriptionurl", ""),
+            "title": title, "url": info["url"], "source_url": info.get("descriptionurl", ""),
             "creator": meta("Artist", "Unknown creator"),
             "license": meta("LicenseShortName", "Unknown license"),
-            "license_version": "",
-            "license_url": meta("LicenseUrl", ""),
+            "license_version": "", "license_url": meta("LicenseUrl", ""),
+            "size": size, "mime": mime, "relevance": overlap,
         })
-    return results
+    return sorted(results, key=lambda item: (-item["relevance"], item["size"]))
+
+
+def stock_category_results(query):
+    """Second Commons-only source path: search files in stock-media and keyword categories."""
+    words = simple_keyword(query)
+    category_query = f"{words} video" if words else "stock footage"
+    params = {
+        "action": "query", "format": "json", "list": "search", "srnamespace": 14,
+        "srsearch": category_query, "srlimit": 5,
+    }
+    url = COMMONS_API + "?" + urllib.parse.urlencode(params)
+    with polite_request(url, timeout=20) as response:
+        payload = json.loads(response.read(1_000_000).decode("utf-8"))
+    categories = [item["title"] for item in payload.get("query", {}).get("search", [])
+                  if item.get("title", "").startswith("Category:")]
+    if not any("stock media" in category.lower() for category in categories):
+        categories.insert(0, "Category:Stock media")
+    terms = set(re.findall(r"[a-z0-9]+", words.lower()))
+    terms -= {"man", "woman", "person", "people", "video", "footage", "stock", "clip", "scene"}
+    if not terms:
+        terms = set(re.findall(r"[a-z0-9]+", words.lower()))
+    results = []
+    seen = set()
+    for category in categories[:3]:
+        params = {
+            "action": "query", "format": "json", "generator": "categorymembers",
+            "gcmtitle": category, "gcmtype": "file", "gcmlimit": 12,
+            "prop": "imageinfo", "iiprop": "url|size|mime|extmetadata",
+        }
+        url = COMMONS_API + "?" + urllib.parse.urlencode(params)
+        try:
+            with polite_request(url, timeout=20) as response:
+                payload = json.loads(response.read(2_000_000).decode("utf-8"))
+        except Exception as exc:
+            print(f"Wikimedia Commons category {category!r} failed: {type(exc).__name__}: {exc}")
+            continue
+        for page in payload.get("query", {}).get("pages", {}).values():
+            info = (page.get("imageinfo") or [{}])[0]
+            mime, size = str(info.get("mime", "")).lower(), int(info.get("size", 0) or 0)
+            if page.get("title") in seen or not mime.startswith("video/") or not info.get("url") or not size or size > MAX_DOWNLOAD_BYTES:
+                continue
+            seen.add(page["title"])
+            metadata = info.get("extmetadata", {})
+            def meta(name, default=""):
+                value = metadata.get(name, {})
+                return html.unescape(re.sub(r"<[^>]+>", "", value.get("value", default))) if isinstance(value, dict) else default
+            title = page.get("title", "Untitled video")
+            relevance = sum(1 for term in terms if term in title.lower())
+            results.append({
+                "title": title, "url": info["url"], "source_url": info.get("descriptionurl", ""),
+                "creator": meta("Artist", "Unknown creator"),
+                "license": meta("LicenseShortName", "Unknown license"),
+                "license_version": "", "license_url": meta("LicenseUrl", ""),
+                "size": size, "mime": mime, "relevance": relevance,
+            })
+    return sorted(results, key=lambda item: (-item["relevance"], item["size"]))
+
 
 
 def download_candidate(result, scene_index, work, query, provider):
@@ -134,23 +211,38 @@ def download_candidate(result, scene_index, work, query, provider):
     if not source:
         raise ValueError("result has no video URL")
     request = urllib.request.Request(source, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(request, timeout=20) as response:
-        content_type = response.headers.get("Content-Type", "").lower()
-        length = response.headers.get("Content-Length")
-        if length and int(length) > MAX_DOWNLOAD_BYTES:
-            raise ValueError("clip exceeds 100 MB download limit")
-        if content_type and not (content_type.startswith("video/") or "octet-stream" in content_type):
-            raise ValueError(f"not a video content type: {content_type}")
-        body = response.read(MAX_DOWNLOAD_BYTES + 1)
-    if len(body) > MAX_DOWNLOAD_BYTES:
-        raise ValueError("clip exceeds 100 MB download limit")
-    path = work / f"source_{scene_index:03d}.bin"
-    path.write_bytes(body)
+    try:
+        response = polite_request(source, timeout=25, max_bytes=MAX_DOWNLOAD_BYTES + 1) if "commons.wikimedia.org" in source or "upload.wikimedia.org" in source else urllib.request.urlopen(request, timeout=25)
+        with response:
+            content_type = response.headers.get("Content-Type", "").lower()
+            length = response.headers.get("Content-Length")
+            if length and int(length) > MAX_DOWNLOAD_BYTES:
+                raise ValueError("clip exceeds 40 MB download limit")
+            if content_type and not (content_type.startswith("video/") or "octet-stream" in content_type):
+                raise ValueError(f"not a video content type: {content_type}")
+            path = work / f"source_{scene_index:03d}.bin"
+            total = 0
+            with path.open("wb") as output:
+                while True:
+                    chunk = response.read(256 * 1024)
+                    if not chunk:
+                        break
+                    total += len(chunk)
+                    if total > MAX_DOWNLOAD_BYTES:
+                        raise ValueError("clip exceeds 40 MB download limit")
+                    output.write(chunk)
+    except Exception:
+        try:
+            path.unlink()
+        except (UnboundLocalError, FileNotFoundError):
+            pass
+        raise
     probe = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=codec_type", "-of", "default=noprint_wrappers=1:nokey=1", str(path)], cwd=ROOT, capture_output=True, text=True, timeout=12)
     if probe.returncode or "video" not in probe.stdout:
         raise ValueError("download is not a readable video")
     return path, {
         "title": result.get("title", "Untitled video"),
+        "filename": result.get("title", "Untitled video").removeprefix("File:"),
         "creator": result.get("creator", "Unknown creator"),
         "license": result.get("license", "Unknown license"),
         "license_version": result.get("license_version", ""),
@@ -158,77 +250,68 @@ def download_candidate(result, scene_index, work, query, provider):
         "source_url": result.get("foreign_landing_url") or result.get("source_url") or source,
         "query": query,
         "provider": provider,
+        "file_size_bytes": result.get("size"),
+        "relevance_score": result.get("relevance", 0),
     }
 
 
-def download_openverse(keyword, scene_index, work):
-    """Try Openverse query variants, then Wikimedia Commons, else report card fallback."""
-    queries = [keyword, simple_keyword(keyword)]
-    tried = set()
+def download_commons_chain(keyword, scene_index, work):
+    """Try direct video search, simplified terms, then relevant stock-media categories."""
+    queries = list(dict.fromkeys(q for q in [keyword, simple_keyword(keyword)] if q))
     failures = []
     for query in queries:
-        if not query or query.lower() in tried:
-            continue
-        tried.add(query.lower())
-        try:
-            results = openverse_results(query)
-        except urllib.error.HTTPError as exc:
-            failures.append(f"Openverse {query!r}: HTTP {exc.code}")
-            print(f"Scene {scene_index}: Openverse returned HTTP {exc.code} for {query!r}")
-            time.sleep(0.7)
-            continue
-        except Exception as exc:
-            failures.append(f"Openverse {query!r}: {type(exc).__name__}: {exc}")
-            print(f"Scene {scene_index}: Openverse query failed for {query!r}: {type(exc).__name__}: {exc}")
-            time.sleep(0.7)
-            continue
-        if not results:
-            failures.append(f"Openverse {query!r}: no results")
-        for result in results:
-            try:
-                return (*download_candidate(result, scene_index, work, query, "Openverse"), failures)
-            except Exception as exc:
-                failures.append(f"Openverse download: {type(exc).__name__}: {exc}")
-                print(f"Scene {scene_index}: Openverse clip download failed: {type(exc).__name__}: {exc}")
-        time.sleep(0.7)
-
-    # Openverse's public API may not expose a video index; Commons is a secondary openly licensed source.
-    for query in queries:
-        if not query:
-            continue
         try:
             results = commons_results(query)
         except Exception as exc:
-            failures.append(f"Wikimedia Commons {query!r}: {type(exc).__name__}: {exc}")
-            print(f"Scene {scene_index}: Wikimedia Commons query failed for {query!r}: {type(exc).__name__}: {exc}")
-            time.sleep(0.7)
+            failures.append(f"Wikimedia Commons search {query!r}: {type(exc).__name__}: {exc}")
+            print(f"Scene {scene_index}: Commons search failed for {query!r}: {type(exc).__name__}: {exc}")
             continue
         if not results:
-            failures.append(f"Wikimedia Commons {query!r}: no results")
+            failures.append(f"Wikimedia Commons search {query!r}: no eligible video results")
+            continue
+        # Search relevancy first. Refuse unrelated hits instead of using a random clip.
         for result in results:
+            if result.get("relevance", 0) < 1:
+                failures.append(f"Wikimedia Commons {result.get('title')}: rejected as a poor keyword match")
+                continue
             try:
-                return (*download_candidate(result, scene_index, work, query, "Wikimedia Commons"), failures)
+                return (*download_candidate(result, scene_index, work, query, "Wikimedia Commons search"), failures)
             except Exception as exc:
-                failures.append(f"Wikimedia Commons download: {type(exc).__name__}: {exc}")
-                print(f"Scene {scene_index}: Wikimedia Commons clip download failed: {type(exc).__name__}: {exc}")
-        time.sleep(0.7)
+                failures.append(f"Wikimedia Commons download {result.get('title')}: {type(exc).__name__}: {exc}")
+                print(f"Scene {scene_index}: Commons download failed for {result.get('title')}: {type(exc).__name__}: {exc}")
+    try:
+        category_results = stock_category_results(keyword)
+    except Exception as exc:
+        failures.append(f"Wikimedia Commons stock categories: {type(exc).__name__}: {exc}")
+        print(f"Scene {scene_index}: Commons stock-category search failed: {type(exc).__name__}: {exc}")
+        category_results = []
+    for result in category_results:
+        if result.get("relevance", 0) < 1:
+            failures.append(f"Wikimedia Commons category {result.get('title')}: rejected as a poor keyword match")
+            continue
+        try:
+            return (*download_candidate(result, scene_index, work, simple_keyword(keyword), "Wikimedia Commons stock-media category"), failures)
+        except Exception as exc:
+            failures.append(f"Wikimedia Commons category download {result.get('title')}: {type(exc).__name__}: {exc}")
+            print(f"Scene {scene_index}: Commons category download failed for {result.get('title')}: {type(exc).__name__}: {exc}")
     return None, None, failures
+
 
 
 def render_scene(scene, index, work):
     keyword = str(scene.get("image_keyword", "")).strip()
     text = str(scene.get("caption_text") or scene.get("text") or "").strip()
-    source_path, attribution, failures = download_openverse(keyword, index + 1, work)
+    source_path, attribution, failures = download_commons_chain(keyword, index + 1, work)
     clip_path = work / f"scene_{index:03d}.mp4"
     overlay_path = work / f"overlay_{index:03d}.png"
     make_caption_overlay(text).save(overlay_path)
     if source_path is None:
-        print(f"Scene {index + 1}: CARD fallback for {keyword!r}; no stock-video download succeeded.")
+        print(f"Scene {index + 1}: CARD fallback for {keyword!r}; no relevant, downloadable stock video found.")
         card_path = work / f"card_{index:03d}.png"
         make_card(text, keyword).save(card_path)
         video_input = ["-loop", "1", "-framerate", str(FPS), "-i", str(card_path)]
     else:
-        print(f"Scene {index + 1}: REAL FOOTAGE ({attribution['provider']}) for {keyword!r}: {attribution['source_url']}")
+        print(f"Scene {index + 1}: REAL FOOTAGE ({attribution['provider']}) file={attribution['filename']!r} keyword={keyword!r}")
         video_input = ["-i", str(source_path)]
     # Fit and crop to 9:16, then add a restrained zoom. The still-card path gets identical motion.
     frames = SCENE_SECONDS * FPS
@@ -266,7 +349,7 @@ def main():
         try:
             clip, attribution, source_failures = render_scene(scene, i, work)
             clips.append(clip)
-            attributions.append({"scene": i + 1, "keyword": str(scene.get("image_keyword", "")), "attribution": attribution, "used_card": attribution is None})
+            attributions.append({"scene": i + 1, "keyword": str(scene.get("image_keyword", "")), "source": attribution.get("provider") if attribution else "Pillow card", "filename": attribution.get("filename") if attribution else None, "attribution": attribution, "used_card": attribution is None})
             failures_by_scene.extend({"scene": i + 1, "failure": failure} for failure in source_failures)
         except Exception as exc:
             failure = f"Scene render fallback: {type(exc).__name__}: {exc}"
@@ -286,7 +369,7 @@ def main():
                  "-map", "[v]", "-an", "-t", str(SCENE_SECONDS), "-r", str(FPS), "-c:v", "libx264", "-preset", "ultrafast",
                  "-crf", "25", "-threads", "2", "-pix_fmt", "yuv420p", str(clip)])
             clips.append(clip)
-            attributions.append({"scene": i + 1, "keyword": str(scene.get("image_keyword", "")), "attribution": None, "used_card": True})
+            attributions.append({"scene": i + 1, "keyword": str(scene.get("image_keyword", "")), "source": "Pillow card", "filename": None, "attribution": None, "used_card": True})
         time.sleep(0.7)
 
     # Hard cuts preserve the requested exact 4 seconds per scene and a 60-second 15-scene reel.
@@ -310,11 +393,14 @@ def main():
          "-movflags", "+faststart", str(final_path)])
 
     metadata = OUTPUT / "attributions.json"
+    report = OUTPUT / "render-report.json"
     metadata.write_text(json.dumps({"title": data.get("title", ""), "sources": attributions, "source_failures": failures_by_scene}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     real = sum(not item.get("used_card", False) for item in attributions)
     cards = len(scenes) - real
+    report.write_text(json.dumps({"title": data.get("title", ""), "total_scenes": len(scenes), "footage_scenes": real, "card_scenes": cards, "duration_seconds": duration, "scenes": [{"scene": item["scene"], "keyword": item["keyword"], "render": "card" if item["used_card"] else "footage", "source": item["source"], "filename": item["filename"], "attribution": item["attribution"]} for item in attributions], "source_failures": failures_by_scene}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Render complete: {real} scenes with real stock footage, {cards} card scenes; {duration}s total.")
     print(f"Attribution metadata: {metadata.relative_to(ROOT)}")
+    print(f"Render report: {report.relative_to(ROOT)}")
     print(f"Source failures logged: {len(failures_by_scene)}")
     print("Hashtags:", " ".join(str(tag) for tag in data.get("hashtags", [])))
 
