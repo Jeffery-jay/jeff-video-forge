@@ -1,155 +1,161 @@
 {
-  "title": "The Fire Payout",
-  "hook": "Babe, the fire don finish. I thank God say you survive.",
-  "format": "B",
+  "title": "Breathing Tax at Ojuelegba",
+  "format": "A",
   "duration_seconds": 60,
+  "hook": "Town crier with megaphone declares FG-approved breathing tax — 500 naira per breath — at Ojuelegba bus park.",
   "characters": [
-    "wife",
-    "husband"
+    "Town Crier (Area Boy with megaphone)",
+    "Mama Nkechi (pepper seller)",
+    "Bros Tunde (danfo conductor)",
+    "Student (with backpack)",
+    "Corper (NYSC khaki)",
+    "LASEPA Officer (reflective vest)",
+    "Area Boy Chairman (gold chain, shades)"
   ],
   "scenes": [
     {
-      "text": "Babe, the fire don finish. I thank God say you survive.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:00-00:00:04",
-      "speaker": "WIFE",
-      "dialogue": "Babe, the fire don finish. I thank God say you survive.",
-      "caption_text": "Babe, the fire don finish. I thank God say you survive.",
-      "sfx": "distant siren"
+      "timing": "0-4s",
+      "speaker": "Town Crier",
+      "dialogue": "Hear hear! Federal Government don approve breathing tax! Five hundred naira per breath! Pay now or hold your breath!",
+      "caption_text": "FG APPROVES BREATHING TAX — ₦500/BREATH",
+      "sfx": "Megaphone feedback screech, danfo horns",
+      "image_keyword": "Ojuelegba bus park morning, town crier with megaphone, crowd freezing mid-step",
+      "text": "Hear hear! Federal Government don approve breathing tax! Five hundred naira per breath! Pay now or hold your breath!"
     },
     {
-      "text": "Na God save me. I think say everything don burn.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:04-00:00:08",
-      "speaker": "HUSBAND",
-      "dialogue": "Na God save me. I think say everything don burn.",
-      "caption_text": "Na God save me. I think say everything don burn.",
-      "sfx": "cough"
+      "timing": "4-8s",
+      "speaker": "Mama Nkechi",
+      "dialogue": "Ah! Na so? Make I stop breathe since? My pepper go spoil if I no blow air for fire!",
+      "caption_text": "MAMA NKECHI: PEPPER NEEDS AIR",
+      "sfx": "Sizzling pepper, crowd murmurs",
+      "image_keyword": "Pepper seller clutching tray, wide eyes, smoke rising from grill",
+      "text": "Ah! Na so? Make I stop breathe since? My pepper go spoil if I no blow air for fire!"
     },
     {
-      "text": "Forget the chair and TV. You dey okay?",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:08-00:00:12",
-      "speaker": "WIFE",
-      "dialogue": "Forget the chair and TV. You dey okay?",
-      "caption_text": "Forget the chair and TV. You dey okay?",
-      "sfx": "soft piano"
+      "timing": "8-12s",
+      "speaker": "Bros Tunde",
+      "dialogue": "Oga, I be conductor. If I no breathe, who go shout 'Oshodi! Oshodi! Enter!'? My voice na my livelihood!",
+      "caption_text": "BROS TUNDE: VOICE = LIVELIHOOD",
+      "sfx": "Danfo engine rev, conductor whistle",
+      "image_keyword": "Danfo conductor hanging off bus door, hand on chest, dramatic pose",
+      "text": "Oga, I be conductor. If I no breathe, who go shout 'Oshodi! Oshodi! Enter!'? My voice na my livelihood!"
     },
     {
-      "text": "I dey. Na only my slippers and phone remain.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:12-00:00:16",
-      "speaker": "HUSBAND",
-      "dialogue": "I dey. Na only my slippers and phone remain.",
-      "caption_text": "I dey. Na only my slippers and phone remain.",
-      "sfx": "sigh"
+      "timing": "12-16s",
+      "speaker": "Student",
+      "dialogue": "Sir, I dey write JAMB next week. If I hold breath, my brain go reset. You want make I fail?",
+      "caption_text": "STUDENT: BRAIN NEEDS OXYGEN FOR JAMB",
+      "sfx": "Pages flipping, distant prayer chant",
+      "image_keyword": "Student in uniform hugging backpack, sweating, looking skyward",
+      "text": "Sir, I dey write JAMB next week. If I hold breath, my brain go reset. You want make I fail?"
     },
     {
-      "text": "Thank God. I was shaking when I hear the news.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:16-00:00:20",
-      "speaker": "WIFE",
-      "dialogue": "Thank God. I was shaking when I hear the news.",
-      "caption_text": "Thank God. I was shaking when I hear the news.",
-      "sfx": "quiet crying"
+      "timing": "16-20s",
+      "speaker": "Corper",
+      "dialogue": "Abeg, I dey serve nation. My allowance never enter. You want make I die for country wey no pay?",
+      "caption_text": "CORPER: ALLOWANCE NOT PAID",
+      "sfx": "NYSC boots marching, whistle",
+      "image_keyword": "Corper in khaki, ID card flipping, empty wallet gesture",
+      "text": "Abeg, I dey serve nation. My allowance never enter. You want make I die for country wey no pay?"
     },
     {
-      "text": "You still come back for me, my love.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:20-00:00:24",
-      "speaker": "HUSBAND",
-      "dialogue": "You still come back for me, my love.",
-      "caption_text": "You still come back for me, my love.",
-      "sfx": "warm music"
+      "timing": "20-24s",
+      "speaker": "Random Man",
+      "dialogue": "My own na: I don breathe since morning. Who go calculate? You get calculator for lung?",
+      "caption_text": "RANDOM MAN: WHO CALCULATES LUNGS?",
+      "sfx": "Calculator clicking sounds, laughter",
+      "image_keyword": "Man tapping chest, pretending to count breaths on fingers",
+      "text": "My own na: I don breathe since morning. Who go calculate? You get calculator for lung?"
     },
     {
-      "text": "Of course. You are more important than property.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:24-00:00:28",
-      "speaker": "WIFE",
-      "dialogue": "Of course. You are more important than property.",
-      "caption_text": "Of course. You are more important than property.",
-      "sfx": "gentle gasp"
+      "timing": "24-28s",
+      "speaker": "Woman with Baby",
+      "dialogue": "Ehn? My pikin just born. He never even enjoy free air? Tax from day one? Na wa o!",
+      "caption_text": "MOTHER: BABY TAXED FROM BIRTH",
+      "sfx": "Baby cooing, wrapper rustle",
+      "image_keyword": "Mother shielding baby, wrapper tight, indignant expression",
+      "text": "Ehn? My pikin just born. He never even enjoy free air? Tax from day one? Na wa o!"
     },
     {
-      "text": "I knew you loved me pass money matter.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:28-00:00:32",
-      "speaker": "HUSBAND",
-      "dialogue": "I knew you loved me pass money matter.",
-      "caption_text": "I knew you loved me pass money matter.",
-      "sfx": "soft laugh"
+      "timing": "28-32s",
+      "speaker": "Old Baba",
+      "dialogue": "I don breathe seventy year free. Now una say make I pay? Na my pension una wan collect?",
+      "caption_text": "OLD BABA: 70 YEARS FREE BREATHING",
+      "sfx": "Walking stick tap, cough",
+      "image_keyword": "Elderly man with walking stick, hand on chest, shaking head",
+      "text": "I don breathe seventy year free. Now una say make I pay? Na my pension una wan collect?"
     },
     {
-      "text": "Insurance says each family gets ten million. You collect?",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:32-00:00:36",
-      "speaker": "WIFE",
-      "dialogue": "Insurance says each family gets ten million. You collect?",
-      "caption_text": "Insurance says each family gets ten million. You collect?",
-      "sfx": "record scratch"
+      "timing": "32-36s",
+      "speaker": "Bros Tunde",
+      "dialogue": "Oga Town Crier! Bring your calculator make we see! I don breathe like twenty times since you start talk!",
+      "caption_text": "CONFRONTATION: SHOW THE CALCULATOR",
+      "sfx": "Crowd gasps, danfo brake screech",
+      "image_keyword": "Conductor pointing at town crier, crowd forming circle",
+      "text": "Oga Town Crier! Bring your calculator make we see! I don breathe like twenty times since you start talk!"
     },
     {
-      "text": "Ten million? I never hear anything like that.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:36-00:00:40",
-      "speaker": "HUSBAND",
-      "dialogue": "Ten million? I never hear anything like that.",
-      "caption_text": "Ten million? I never hear anything like that.",
-      "sfx": "gasp"
+      "timing": "36-40s",
+      "speaker": "Town Crier",
+      "dialogue": "Calculator? Na mental maths I dey use. You think government get budget for calculator?",
+      "caption_text": "TOWN CRIER: MENTAL MATHS ONLY",
+      "sfx": "Megaphone click, awkward silence",
+      "image_keyword": "Town crier tapping temple, smug grin, megaphone lowered",
+      "text": "Calculator? Na mental maths I dey use. You think government get budget for calculator?"
     },
     {
-      "text": "You survived and still missed the payout?",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:40-00:00:44",
-      "speaker": "WIFE",
-      "dialogue": "You survived and still missed the payout?",
-      "caption_text": "You survived and still missed the payout?",
-      "sfx": "dramatic sting"
+      "timing": "40-44s",
+      "speaker": "Mama Nkechi",
+      "dialogue": "Mental maths? For my ₦500 per breath? Bring POS make I tap! I no get cash!",
+      "caption_text": "MAMA NKECHI: POS ONLY, NO CASH",
+      "sfx": "POS beep, crowd murmurs agreement",
+      "image_keyword": "Pepper seller holding out phone with POS app open, determined",
+      "text": "Mental maths? For my ₦500 per breath? Bring POS make I tap! I no get cash!"
     },
     {
-      "text": "I was busy trying to stay alive!",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:44-00:00:48",
-      "speaker": "HUSBAND",
-      "dialogue": "I was busy trying to stay alive!",
-      "caption_text": "I was busy trying to stay alive!",
-      "sfx": "cough"
+      "timing": "44-48s",
+      "speaker": "LASEPA Officer",
+      "dialogue": "Hold am there! LASEPA never approve any breathing tax. Who be this one with megaphone?",
+      "caption_text": "LASEPA OFFICER ENTERS: NO SUCH TAX",
+      "sfx": "Siren chirp, radio static, authoritative footsteps",
+      "image_keyword": "LASEPA officer in reflective vest, badge visible, crowd parting",
+      "text": "Hold am there! LASEPA never approve any breathing tax. Who be this one with megaphone?"
     },
     {
-      "text": "Next time, read the policy before you run out!",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:48-00:00:52",
-      "speaker": "WIFE",
-      "dialogue": "Next time, read the policy before you run out!",
-      "caption_text": "Next time, read the policy before you run out!",
-      "sfx": "record scratch"
+      "timing": "48-52s",
+      "speaker": "Town Crier",
+      "dialogue": "Oga Officer, na... na... na prank wey we dey do for TikTok! Content creation!",
+      "caption_text": "TOWN CRIER: 'TIKTOK PRANK' EXCUSE",
+      "sfx": "Nervous laughter, phone camera shutter",
+      "image_keyword": "Town crier sweating, hiding megaphone behind back, phone in other hand",
+      "text": "Oga Officer, na... na... na prank wey we dey do for TikTok! Content creation!"
     },
     {
-      "text": "Next time? You want another fire?",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:52-00:00:56",
-      "speaker": "HUSBAND",
-      "dialogue": "Next time? You want another fire?",
-      "caption_text": "Next time? You want another fire?",
-      "sfx": "nervous laugh"
+      "timing": "52-56s",
+      "speaker": "Area Boy Chairman",
+      "dialogue": "TikTok? For this Ojuelegba? Boys, carry am go 'office' make e explain better. Today na 'air tax' collection day.",
+      "caption_text": "CHAIRMAN: 'OFFICE' AWAITS",
+      "sfx": "Motorcycle revs, chain rattle, crowd cheers",
+      "image_keyword": "Area boy chairman in gold chain/shades, two boys grabbing town crier by arms",
+      "text": "TikTok? For this Ojuelegba? Boys, carry am go 'office' make e explain better. Today na 'air tax' collection day."
     },
     {
-      "text": "No. I want you to read the small print, my dear.",
-      "image_keyword": "Surulere flat, Nigerian comedy scene",
-      "timing": "00:00:56-00:01:00",
-      "speaker": "WIFE",
-      "dialogue": "No. I want you to read the small print, my dear.",
-      "caption_text": "No. I want you to read the small print, my dear.",
-      "sfx": "laugh track"
+      "timing": "56-60s",
+      "speaker": "Bros Tunde",
+      "dialogue": "See? Na so e easy. Free air don return. But make una no forget — conductor money still dey!",
+      "caption_text": "FREE AIR RESTORED. CONDUCTOR MONEY STAYS.",
+      "sfx": "Danfo horn melody, collective exhale, Afrobeats kick",
+      "image_keyword": "Conductor winking at camera, thumb up, bus park returning to chaos",
+      "text": "See? Na so e easy. Free air don return. But make una no forget — conductor money still dey!"
     }
   ],
-  "caption": "Love is patient. But did you read the insurance policy? 😂",
+  "caption": "When FG 'approves' breathing tax at Ojuelegba 😂 Lagos no dey carry last! Who go pay ₦500 per breath? Tag your conductor 🚐💨",
   "hashtags": [
-    "#NaijaComedy",
-    "#LagosSkit",
-    "#NigerianTikTok",
+    "#LagosComedy",
     "#NaijaSkit",
-    "#ComedySkits"
+    "#OjuelegbaChronicles",
+    "#PidginComedy",
+    "#AreaBoyLogic",
+    "#LagosLife"
   ]
 }
