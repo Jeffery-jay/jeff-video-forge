@@ -226,12 +226,17 @@ PRIOR WEEK BRIEF:
 """
     body = json.dumps({"model": "nvidia/nemotron-3-ultra-550b-a55b:free",
                        "messages": [{"role": "user", "content": prompt}],
-                       "temperature": 0.4, "response_format": {"type": "json_object"}}).encode()
+                       "temperature": 0.4, "max_tokens": 16000,
+                       "reasoning": {"effort": "low"},
+                       "response_format": {"type": "json_object"}}).encode()
     request = Request("https://openrouter.ai/api/v1/chat/completions", data=body,
                       headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}, method="POST")
     with urlopen(request, timeout=120) as response:
         result = json.load(response)
-    text = result["choices"][0]["message"]["content"].strip()
+    choice = result["choices"][0]
+    if choice.get("finish_reason") == "length":
+        raise ValueError("OpenRouter response truncated (increase max_tokens or shorten prompt)")
+    text = choice["message"]["content"].strip()
     try:
         parsed = json.loads(text)
     except json.JSONDecodeError:
