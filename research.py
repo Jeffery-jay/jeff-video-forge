@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect public food-video trend signals and draft a Mama Ada Kitchen brief."""
+"""Research Nigerian short-form comedy signals and draft a complete skit."""
 
 import json
 import os
@@ -86,6 +86,25 @@ def load_previous_week():
         return "Previous trend brief could not be read."
 
 
+def fallback_skit(signals):
+    fmt_a = date.fromisoformat(signals["date"]).toordinal() % 2 == 0
+    if fmt_a:
+        title, hook, setting = "DNA Test at Ojuelegba", "Attention! Every baby born here must take a DNA test before boarding!", "Ojuelegba bus park"
+        lines = [("ANNOUNCER",hook,"gasp"),("MAMA TITI","My pikin get my nose, na my husband I no sure again!","record scratch"),("CONDUCTOR","Oga, I only dey work here. Why una dey look my face?","crowd murmur"),("PASSENGER","I no get baby, but test my goat. E resemble my landlord!","goat bleat"),("MAMA TITI","My baby born for Surulere, but him dey cry with Ajah accent!","baby crying"),("PASSENGER","I just come buy pure water, I no know anybody here!","running footsteps"),("ANNOUNCER","Late test fee na fifty thousand!","cash register"),("CONDUCTOR","Who announce this thing?","whistle"),("MAMA TITI","Conductor, bring your own birth certificate!","record scratch"),("CONDUCTOR","My mama know my papa, I swear!","nervous laugh"),("OFFICER","Nobody move. I be the official DNA inspector!","siren"),("OFFICER","Conductor, you are the first person we dey test today.","dramatic sting"),("CONDUCTOR","Please test the goat first!","goat bleat"),("MAMA TITI","Lagos bus stop: even your excuse need evidence!","laugh track"),("ANNOUNCER","Follow for more wahala. Result loading!","meme outro")]
+        caption = "DNA test at Ojuelegba bus park? Lagos people no dey disappoint 😂"
+        characters = ["announcer", "Mama Titi", "bus conductor", "passengers", "official"]
+    else:
+        title, hook, setting = "The Fire Payout", "Babe, the fire don finish. I thank God say you survive.", "Surulere flat"
+        lines = [("WIFE",hook,"distant siren"),("HUSBAND","Na God save me. I think say everything don burn.","cough"),("WIFE","Forget the chair and TV. You dey okay?","soft piano"),("HUSBAND","I dey. Na only my slippers and phone remain.","sigh"),("WIFE","Thank God. I was shaking when I hear the news.","quiet crying"),("HUSBAND","You still come back for me, my love.","warm music"),("WIFE","Of course. You are more important than property.","gentle gasp"),("HUSBAND","I knew you loved me pass money matter.","soft laugh"),("WIFE","Insurance says each family gets ten million. You collect?","record scratch"),("HUSBAND","Ten million? I never hear anything like that.","gasp"),("WIFE","You survived and still missed the payout?","dramatic sting"),("HUSBAND","I was busy trying to stay alive!","cough"),("WIFE","Next time, read the policy before you run out!","record scratch"),("HUSBAND","Next time? You want another fire?","nervous laugh"),("WIFE","No. I want you to read the small print, my dear.","laugh track")]
+        caption = "Love is patient. But did you read the insurance policy? 😂"
+        characters = ["wife", "husband"]
+    scenes = []
+    for i, (speaker, line, sfx) in enumerate(lines):
+        start = i * 4; end = start + 4
+        timing = f"00:{start // 60:02d}:{start % 60:02d}-00:{end // 60:02d}:{end % 60:02d}"
+        scenes.append({"text": line, "image_keyword": setting + ", Nigerian comedy scene", "timing": timing, "speaker": speaker, "dialogue": line, "caption_text": line, "sfx": sfx})
+    return {"title": title, "hook": hook, "format": "A" if fmt_a else "B", "duration_seconds": 60, "characters": characters, "scenes": scenes, "caption": caption, "hashtags": ["#NaijaComedy", "#LagosSkit", "#NigerianTikTok", "#NaijaSkit", "#ComedySkits"]}
+
 def template_brief(signals, previous):
     rows = [
         "# Weekly trend brief: Mama Ada Kitchen",
@@ -108,16 +127,28 @@ def template_brief(signals, previous):
     ]
     if previous and previous != "No previous trends/trends.md found.":
         rows += ["\n## Continuity", "\nLast week's brief was read for continuity. No automated comparison was generated in template fallback."]
-    return "\n".join(rows), None
+    script = fallback_skit(signals)
+    rows += ["\n## Skit selected", "\nFormat " + script["format"] + ": " + script["title"] + ". Template fallback is a creative draft, not a verified trend claim."]
+    return "\n".join(rows), script
 
 
 def gemini_generation(signals, previous, api_key):
     import urllib.error
-    prompt = f"""You are a careful social-video trend researcher for Mama Ada Kitchen, a Lagos restaurant. Use only the supplied signal data and prior brief. Distinguish direct evidence from hypotheses. Never claim view counts, viral status, current rankings, or a specific trending song unless the supplied source explicitly shows it. Cite source URLs beside claims and mark inaccessible or JavaScript-shell pages clearly.
+    run_no = int(os.getenv("GITHUB_RUN_NUMBER", "0") or 0)
+    parity = (run_no if run_no else TODAY.toordinal()) % 2
+    format_name = "A" if parity == 1 else "B"
+    prompt = f"""You are a Nigerian short-form comedy trend researcher and skit writer. Research supplied public signals for Nigerian/African comedy themes and sounds. Distinguish observed source text from hypotheses. Never invent rankings, counts, virality, exact songs, or trending status. Mark JavaScript-shell pages clearly. Recommend only sounds the creator can verify and license.
 
-Return ONLY valid JSON with exactly these top-level keys: trend_brief (Markdown string), draft_script (object). The trend_brief must document 3-5 actionable content strategies and cover hook style, pacing, sound type and format; cite supplied source URLs and separate observations from recommendations. The draft_script must match this schema: {{\"title\": string, \"scenes\": [{{\"text\": string, \"image_keyword\": string}}], \"caption\": string, \"hashtags\": [string]}}. Make a practical short food reel for Mama Ada Kitchen in Lagos based on the strongest supported trend signal. Use 3-5 scenes. Do not instruct copying a creator or using unlicensed music.
+Pick exactly ONE strong, realistic Lagos premise, then write a COMPLETE original 60-second comedy skit, not a content idea or food ad. Alternate formats deterministically: use GitHub run number parity when available, otherwise date parity. Required format: FORMAT {format_name} (parity {parity}).
+FORMAT A: shocking public announcement in the first 5 seconds, mass panic escalating through absurd excuses, punchline confrontation, authority-figure twist, meme outro.
+FORMAT B: quiet domestic two-character setup, empathetic escalation, one dark ironic twist landing on a single greed punchline, laughing meme outro. Keep it fictional and non-graphic.
+Both: realistic Lagos setting, natural pidgin-flavored dialogue, hook, characters, timed scene-by-scene dialogue, an SFX cue per beat, on-screen caption text per scene, posting caption and hashtags. Use 15 scenes of 4 seconds each. Each scene MUST contain non-empty string text and image_keyword for render.py, with timing, speaker, dialogue, caption_text, and sfx as safe extra fields. Root keys include title, scenes, caption, hashtags, and may include hook, format, duration_seconds, characters. No other root keys. render.py reads title, scene text/image_keyword, caption and hashtags. Keep overlay text concise. Do not copy creators or use unlicensed music.
+
+Return ONLY valid JSON with exactly root keys trend_brief (Markdown) and draft_script (object). Brief gives source-aware observations/recommendations about premise, format, pacing, sound; cite supplied URLs, label hypotheses, note unavailable sources. draft_script is the complete skit.
 
 TODAY: {TODAY.isoformat()}
+RUN NUMBER: {run_no or "unavailable"}
+REQUIRED FORMAT: {format_name}
 TREND SIGNALS:
 {json.dumps(signals, ensure_ascii=False)}
 PRIOR WEEK BRIEF:
@@ -148,8 +179,10 @@ def validate_script(script):
     if not isinstance(script["scenes"], list) or not script["scenes"]:
         raise ValueError("draft script scenes must be a non-empty list")
     for scene in script["scenes"]:
-        if not isinstance(scene, dict) or not scene.get("text") or not scene.get("image_keyword"):
-            raise ValueError("each scene needs text and image_keyword")
+        if not isinstance(scene, dict) or not isinstance(scene.get("text"), str) or not scene["text"].strip() or not isinstance(scene.get("image_keyword"), str) or not scene["image_keyword"].strip():
+            raise ValueError("each scene needs non-empty text and image_keyword strings")
+    if not isinstance(script["caption"], str) or not isinstance(script["hashtags"], list):
+        raise ValueError("caption must be a string and hashtags a list")
 
 
 def commit_outputs():
@@ -236,10 +269,7 @@ def main():
                f"Mode: {mode}. {draft_status}\n"
                "Review the brief and draft in the Jeffery-jay/jeff-video-forge repository before production.")
     commit_outputs()
-    telegram_sent = send_telegram(summary)
-    if not telegram_sent:
-        raise RuntimeError("Research completed but Telegram summary was not delivered.")
-    print(f"Research complete. Mode: {mode}. Brief: {daily_path.relative_to(ROOT)}. Telegram sent: {telegram_sent}.")
+    print(f"Research complete. Mode: {mode}. Brief: {daily_path.relative_to(ROOT)}. Draft: {script['title']}. Telegram delivery intentionally skipped.")
 
 
 if __name__ == "__main__":
