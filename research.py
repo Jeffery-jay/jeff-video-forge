@@ -185,6 +185,43 @@ def validate_script(script):
         raise ValueError("caption must be a string and hashtags a list")
 
 
+def openrouter_generation(signals, previous, api_key):
+    """Fallback brain: OpenRouter free model, same JSON contract as Gemini."""
+    run_no = int(os.getenv("GITHUB_RUN_NUMBER", "0") or 0)
+    parity = (run_no if run_no else TODAY.toordinal()) % 2
+    format_name = "A" if parity == 1 else "B"
+    prompt = f"""You are a Nigerian short-form comedy trend researcher and skit writer. Research supplied public signals for Nigerian/African comedy themes and sounds. Distinguish observed source text from hypotheses. Never invent rankings, counts, virality, exact songs, or trending status.
+
+Pick exactly ONE strong, realistic Lagos premise, then write a COMPLETE original 60-second comedy skit, not a content idea or food ad. Required format: FORMAT {format_name}.
+FORMAT A: shocking public announcement in the first 5 seconds, mass panic escalating through absurd excuses, punchline confrontation, authority-figure twist, meme outro.
+FORMAT B: quiet domestic two-character setup, empathetic escalation, one dark ironic twist landing on a single greed punchline, laughing meme outro. Keep it fictional and non-graphic.
+Both: realistic Lagos setting, natural pidgin-flavored dialogue, hook, characters, timed scene-by-scene dialogue, an SFX cue per beat, on-screen caption text per scene, posting caption and hashtags. Use 15 scenes of 4 seconds each. Each scene MUST contain non-empty string text and image_keyword for render.py, with timing, speaker, dialogue, caption_text, and sfx as safe extra fields. Root keys include title, scenes, caption, hashtags, and may include hook, format, duration_seconds, characters. No other root keys. Keep overlay text concise. Do not copy creators or use unlicensed music.
+
+Return ONLY valid JSON with exactly root keys trend_brief (Markdown) and draft_script (object). draft_script is the complete skit.
+
+TODAY: {TODAY.isoformat()}
+REQUIRED FORMAT: {format_name}
+TREND SIGNALS:
+{json.dumps(signals, ensure_ascii=False)}
+PRIOR WEEK BRIEF:
+{previous[:10000]}
+"""
+    body = json.dumps({"model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+                       "messages": [{"role": "user", "content": prompt}],
+                       "temperature": 0.4, "response_format": {"type": "json_object"}}).encode()
+    request = Request("https://openrouter.ai/api/v1/chat/completions", data=body,
+                      headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}, method="POST")
+    with urlopen(request, timeout=120) as response:
+        result = json.load(response)
+    text = result["choices"][0]["message"]["content"]
+    parsed = json.loads(text)
+    brief, script = parsed.get("trend_brief"), parsed.get("draft_script")
+    if not isinstance(brief, str) or not isinstance(script, dict):
+        raise ValueError("OpenRouter returned an incomplete brief or script")
+    validate_script(script)
+    return brief, script
+
+
 def commit_outputs():
     subprocess.run(["git", "config", "user.name", "github-actions[bot]"], check=True, cwd=ROOT)
     subprocess.run(["git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"], check=True, cwd=ROOT)
@@ -236,20 +273,42 @@ def main():
         "tiktok_creative_center": collect_tiktok(),
     }
     api_key = os.getenv("GEMINI_API_KEY")
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
     if api_key:
         try:
             brief, script = gemini_generation(signals, previous, api_key)
             mode = "Gemini"
             draft_status = "Draft script generated with Gemini."
-        except RuntimeError as exc:
-            print(f"{exc}; using template fallback.", file=sys.stderr)
+        except (RuntimeError, OSError, json.JSONDecodeError, ValueError) as exc:
+            print(f"{exc}; trying OpenRouter fallback.", file=sys.stderr)
+            if openrouter_key:
+                try:
+                    brief, script = openrouter_generation(signals, previous, openrouter_key)
+                    mode = "OpenRouter fallback"
+                    draft_status = "Draft script generated with OpenRouter after Gemini failed."
+                except Exception as exc2:
+                    print(f"OpenRouter fallback failed: {type(exc2).__name__}; using template fallback.", file=sys.stderr)
+                    brief, script = template_brief(signals, previous)
+                    mode = "template fallback"
+                    draft_status = "Draft script skipped because Gemini and OpenRouter both failed."
+            else:
+                brief, script = template_brief(signals, previous)
+                mode = "template fallback"
+                draft_status = "Draft script skipped because Gemini failed and no OPENROUTER_API_KEY is configured."
+    elif openrouter_key:
+        try:
+            brief, script = openrouter_generation(signals, previous, openrouter_key)
+            mode = "OpenRouter"
+            draft_status = "Draft script generated with OpenRouter."
+        except Exception as exc:
+            print(f"OpenRouter generation failed: {type(exc).__name__}; using template fallback.", file=sys.stderr)
             brief, script = template_brief(signals, previous)
             mode = "template fallback"
-            draft_status = "Draft script skipped because Gemini generation failed."
+            draft_status = "Draft script skipped because OpenRouter generation failed."
     else:
         brief, script = template_brief(signals, previous)
         mode = "template fallback"
-        draft_status = "Draft script skipped because GEMINI_API_KEY is not configured."
+        draft_status = "Draft script skipped because no LLM key is configured."
 
     TRENDS_DIR.mkdir(parents=True, exist_ok=True)
     daily_path = TRENDS_DIR / f"trends-{TODAY.isoformat()}.md"
