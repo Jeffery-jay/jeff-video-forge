@@ -181,6 +181,29 @@ PRIOR WEEK BRIEF:
         raise RuntimeError(f"Gemini generation failed: {type(exc).__name__}: {exc}") from exc
 
 
+def normalize_script(script):
+    """Coerce LLM output into render.py's schema: fix scene field shapes, drop dead scenes."""
+    scenes = script.get("scenes")
+    if isinstance(scenes, list):
+        fixed = []
+        for scene in scenes:
+            if not isinstance(scene, dict):
+                continue
+            text = scene.get("text") or scene.get("dialogue") or scene.get("line") or scene.get("caption_text") or ""
+            keyword = scene.get("image_keyword") or scene.get("image") or scene.get("setting") or "Lagos street scene, Nigerian comedy"
+            scene["text"] = str(text).strip() or "..."
+            scene["image_keyword"] = str(keyword).strip()
+            fixed.append(scene)
+        if len(fixed) > 20:
+            fixed = fixed[:20]
+        script["scenes"] = fixed
+    script["caption"] = str(script.get("caption") or "Lagos comedy skit").strip()
+    tags = script.get("hashtags")
+    if not isinstance(tags, list) or not tags:
+        script["hashtags"] = ["#NaijaComedy", "#LagosSkit"]
+    return script
+
+
 def validate_script(script):
     required = ("title", "scenes", "caption", "hashtags")
     if any(key not in script for key in required):
@@ -247,6 +270,7 @@ PRIOR WEEK BRIEF (first 3000 chars):
     brief, script = parsed.get("trend_brief"), parsed.get("draft_script")
     if not isinstance(brief, str) or not isinstance(script, dict):
         raise ValueError("OpenRouter returned an incomplete brief or script")
+    script = normalize_script(script)
     validate_script(script)
     return brief, script
 
