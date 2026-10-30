@@ -137,9 +137,18 @@ def gemini_generation(signals, previous, api_key):
     run_no = int(os.getenv("GITHUB_RUN_NUMBER", "0") or 0)
     parity = (run_no if run_no else TODAY.toordinal()) % 2
     format_name = "A" if parity == 1 else "B"
+    quality_path = ROOT / "prompts" / "skit-quality.md"
+    try:
+        quality_layer = quality_path.read_text(encoding="utf-8")
+    except OSError:
+        quality_layer = "(quality layer file missing: rely on the built-in rubric above.)"
     prompt = f"""You are a Nigerian short-form comedy trend researcher and skit writer. Research supplied public signals for Nigerian/African comedy themes and sounds. Distinguish observed source text from hypotheses. Never invent rankings, counts, virality, exact songs, or trending status. Mark JavaScript-shell pages clearly. Recommend only sounds the creator can verify and license.
 
+First silently PLAN the skit (outline: premise, hook, beats, twist), then CRITICIZE it as a harsh Lagos audience member using the quality layer below, fix the weakest parts, and only then write the final skit. Never output the outline or critique.
 Pick exactly ONE strong, realistic Lagos premise, then write a COMPLETE original 60-second comedy skit, not a content idea or food ad. Alternate formats deterministically: use GitHub run number parity when available, otherwise date parity. Required format: FORMAT {format_name} (parity {parity}).
+
+QUALITY LAYER (from prompts/skit-quality.md, must all pass):
+{{quality_layer}}
 FORMAT A: shocking public announcement in the first 5 seconds, mass panic escalating through absurd excuses, punchline confrontation, authority-figure twist, meme outro.
 FORMAT B: quiet domestic two-character setup, empathetic escalation, one dark ironic twist landing on a single greed punchline, laughing meme outro. Keep it fictional and non-graphic.
 Both: realistic Lagos setting, natural pidgin-flavored dialogue, hook, characters, timed scene-by-scene dialogue, an SFX cue per beat, on-screen caption text per scene, posting caption and hashtags. Use 15 scenes of 4 seconds each. Each scene MUST contain non-empty string text and image_keyword for render.py, with timing, speaker, dialogue, caption_text, and sfx as safe extra fields. Root keys include title, scenes, caption, hashtags, and may include hook, format, duration_seconds, characters. No other root keys. render.py reads title, scene text/image_keyword, caption and hashtags. Keep overlay text concise. Do not copy creators or use unlicensed music.
@@ -190,9 +199,18 @@ def openrouter_generation(signals, previous, api_key):
     run_no = int(os.getenv("GITHUB_RUN_NUMBER", "0") or 0)
     parity = (run_no if run_no else TODAY.toordinal()) % 2
     format_name = "A" if parity == 1 else "B"
+    quality_path = ROOT / "prompts" / "skit-quality.md"
+    try:
+        quality_layer = quality_path.read_text(encoding="utf-8")
+    except OSError:
+        quality_layer = "(quality layer file missing: rely on the built-in rubric above.)"
     prompt = f"""You are a Nigerian short-form comedy trend researcher and skit writer. Research supplied public signals for Nigerian/African comedy themes and sounds. Distinguish observed source text from hypotheses. Never invent rankings, counts, virality, exact songs, or trending status.
 
+First silently PLAN the skit (outline: premise, hook, beats, twist), then CRITICIZE it as a harsh Lagos audience member using the quality layer below, fix the weakest parts, and only then write the final skit. Never output the outline or critique.
 Pick exactly ONE strong, realistic Lagos premise, then write a COMPLETE original 60-second comedy skit, not a content idea or food ad. Required format: FORMAT {format_name}.
+
+QUALITY LAYER (from prompts/skit-quality.md, must all pass):
+{{quality_layer}}
 FORMAT A: shocking public announcement in the first 5 seconds, mass panic escalating through absurd excuses, punchline confrontation, authority-figure twist, meme outro.
 FORMAT B: quiet domestic two-character setup, empathetic escalation, one dark ironic twist landing on a single greed punchline, laughing meme outro. Keep it fictional and non-graphic.
 Both: realistic Lagos setting, natural pidgin-flavored dialogue, hook, characters, timed scene-by-scene dialogue, an SFX cue per beat, on-screen caption text per scene, posting caption and hashtags. Use 15 scenes of 4 seconds each. Each scene MUST contain non-empty string text and image_keyword for render.py, with timing, speaker, dialogue, caption_text, and sfx as safe extra fields. Root keys include title, scenes, caption, hashtags, and may include hook, format, duration_seconds, characters. No other root keys. Keep overlay text concise. Do not copy creators or use unlicensed music.
