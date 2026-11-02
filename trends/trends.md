@@ -1,4 +1,4 @@
-# Nigerian Comedy Skit Trend Brief - 2026-10-30
+# Nigerian Comedy Skit Trend Brief - 2026-11-02
 
 ## Observed Signals (Public Sources)
 - Google Trends NG shows search interest for "nigerian comedy skit trend", "naija tiktok comedy", "lagos comedy skit", "african short form comedy", "nigerian tiktok sounds comedy" — all at baseline/low recent averages; peak interest for "naija tiktok comedy" hit 100 at some point in the window.
@@ -11,8 +11,8 @@
 3. Upbeat Afrobeats/amapiano sounds may lift engagement if licensed — conditional on account-level music library.
 
 ## Creative Direction for This Skit
-- Format A: shocking public announcement → mass panic → absurd excuses → confrontation → authority twist → meme outro.
-- Setting: Ojuelegba bus park, morning rush.
+- Format B: quiet domestic two-character setup → empathetic escalation → one dark ironic twist landing on a single greed punchline → laughing meme outro.
+- Setting: Lagos mainland flat, evening.
 - Language: Natural Lagos Pidgin with code-switching.
 - No invented virality claims, no copied creators, no unlicensed music references.
 - 15 scenes × 4 seconds = 60 seconds.

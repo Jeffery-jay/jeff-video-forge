@@ -1,161 +1,156 @@
 {
-  "title": "Breathing Tax at Ojuelegba",
-  "format": "A",
+  "title": "Investment Portfolio",
+  "format": "B",
   "duration_seconds": 60,
-  "hook": "Town crier with megaphone declares FG-approved breathing tax — 500 naira per breath — at Ojuelegba bus park.",
+  "hook": "Wife sells husband's PS5 to celebrate his new job — calls it 'asset reallocation'.",
   "characters": [
-    "Town Crier (Area Boy with megaphone)",
-    "Mama Nkechi (pepper seller)",
-    "Bros Tunde (danfo conductor)",
-    "Student (with backpack)",
-    "Corper (NYSC khaki)",
-    "LASEPA Officer (reflective vest)",
-    "Area Boy Chairman (gold chain, shades)"
+    "Tunde (husband, 30s, tired but hopeful)",
+    "Bisi (wife, 30s, practical, deadpan)"
   ],
   "scenes": [
     {
-      "timing": "0-4s",
-      "speaker": "Town Crier",
-      "dialogue": "Hear hear! Federal Government don approve breathing tax! Five hundred naira per breath! Pay now or hold your breath!",
-      "caption_text": "FG APPROVES BREATHING TAX — ₦500/BREATH",
-      "sfx": "Megaphone feedback screech, danfo horns",
-      "image_keyword": "Ojuelegba bus park morning, town crier with megaphone, crowd freezing mid-step",
-      "text": "Hear hear! Federal Government don approve breathing tax! Five hundred naira per breath! Pay now or hold your breath!"
+      "timing": "0:00-0:04",
+      "speaker": "Tunde",
+      "dialogue": "Babe, I got the job. Offer letter just dropped.",
+      "caption_text": "Tunde gets the offer",
+      "sfx": "phone notification ping",
+      "image_keyword": "man holding phone smiling in modest Lagos sitting room evening light",
+      "text": "Babe, I got the job. Offer letter just dropped."
     },
     {
-      "timing": "4-8s",
-      "speaker": "Mama Nkechi",
-      "dialogue": "Ah! Na so? Make I stop breathe since? My pepper go spoil if I no blow air for fire!",
-      "caption_text": "MAMA NKECHI: PEPPER NEEDS AIR",
-      "sfx": "Sizzling pepper, crowd murmurs",
-      "image_keyword": "Pepper seller clutching tray, wide eyes, smoke rising from grill",
-      "text": "Ah! Na so? Make I stop breathe since? My pepper go spoil if I no blow air for fire!"
+      "timing": "0:04-0:08",
+      "speaker": "Bisi",
+      "dialogue": "Ah! Thank God. Finally. Open the Indomie, make we celebrate.",
+      "caption_text": "Bisi gives thanks",
+      "sfx": "pot cover clatter",
+      "image_keyword": "woman stirring pot in small kitchen, genuine smile",
+      "text": "Ah! Thank God. Finally. Open the Indomie, make we celebrate."
     },
     {
-      "timing": "8-12s",
-      "speaker": "Bros Tunde",
-      "dialogue": "Oga, I be conductor. If I no breathe, who go shout 'Oshodi! Oshodi! Enter!'? My voice na my livelihood!",
-      "caption_text": "BROS TUNDE: VOICE = LIVELIHOOD",
-      "sfx": "Danfo engine rev, conductor whistle",
-      "image_keyword": "Danfo conductor hanging off bus door, hand on chest, dramatic pose",
-      "text": "Oga, I be conductor. If I no breathe, who go shout 'Oshodi! Oshodi! Enter!'? My voice na my livelihood!"
+      "timing": "0:08-0:12",
+      "speaker": "Tunde",
+      "dialogue": "Indomie? Babe, this is entry-level oil & gas. We go chop goat meat tonight.",
+      "caption_text": "Big plans",
+      "sfx": "laugh track lite",
+      "image_keyword": "man animated, pointing at imaginary feast",
+      "text": "Indomie? Babe, this is entry-level oil & gas. We go chop goat meat tonight."
     },
     {
-      "timing": "12-16s",
-      "speaker": "Student",
-      "dialogue": "Sir, I dey write JAMB next week. If I hold breath, my brain go reset. You want make I fail?",
-      "caption_text": "STUDENT: BRAIN NEEDS OXYGEN FOR JAMB",
-      "sfx": "Pages flipping, distant prayer chant",
-      "image_keyword": "Student in uniform hugging backpack, sweating, looking skyward",
-      "text": "Sir, I dey write JAMB next week. If I hold breath, my brain go reset. You want make I fail?"
+      "timing": "0:12-0:16",
+      "speaker": "Bisi",
+      "dialogue": "Goat meat noted. Go shower, food dey come.",
+      "caption_text": "Wife on a mission",
+      "sfx": "water running",
+      "image_keyword": "woman shooing man toward bathroom, pot steaming",
+      "text": "Goat meat noted. Go shower, food dey come."
     },
     {
-      "timing": "16-20s",
-      "speaker": "Corper",
-      "dialogue": "Abeg, I dey serve nation. My allowance never enter. You want make I die for country wey no pay?",
-      "caption_text": "CORPER: ALLOWANCE NOT PAID",
-      "sfx": "NYSC boots marching, whistle",
-      "image_keyword": "Corper in khaki, ID card flipping, empty wallet gesture",
-      "text": "Abeg, I dey serve nation. My allowance never enter. You want make I die for country wey no pay?"
+      "timing": "0:16-0:20",
+      "speaker": "Tunde",
+      "dialogue": "Three months unemployment, you still dey feed me like king. I no forget.",
+      "caption_text": "Gratitude",
+      "sfx": "soft Afrobeats instrumental low",
+      "image_keyword": "man leaning on doorframe, soft eyes",
+      "text": "Three months unemployment, you still dey feed me like king. I no forget."
     },
     {
-      "timing": "20-24s",
-      "speaker": "Random Man",
-      "dialogue": "My own na: I don breathe since morning. Who go calculate? You get calculator for lung?",
-      "caption_text": "RANDOM MAN: WHO CALCULATES LUNGS?",
-      "sfx": "Calculator clicking sounds, laughter",
-      "image_keyword": "Man tapping chest, pretending to count breaths on fingers",
-      "text": "My own na: I don breathe since morning. Who go calculate? You get calculator for lung?"
+      "timing": "0:20-0:24",
+      "speaker": "Bisi",
+      "dialogue": "Na we. Partnership. Go wash that stress commot.",
+      "caption_text": "Partnership",
+      "sfx": "door click",
+      "image_keyword": "woman wiping hands on wrapper, nodding",
+      "text": "Na we. Partnership. Go wash that stress commot."
     },
     {
-      "timing": "24-28s",
-      "speaker": "Woman with Baby",
-      "dialogue": "Ehn? My pikin just born. He never even enjoy free air? Tax from day one? Na wa o!",
-      "caption_text": "MOTHER: BABY TAXED FROM BIRTH",
-      "sfx": "Baby cooing, wrapper rustle",
-      "image_keyword": "Mother shielding baby, wrapper tight, indignant expression",
-      "text": "Ehn? My pikin just born. He never even enjoy free air? Tax from day one? Na wa o!"
+      "timing": "0:24-0:28",
+      "speaker": "Narrator",
+      "dialogue": "",
+      "caption_text": "20 minutes later...",
+      "sfx": "time passage whoosh",
+      "image_keyword": "wall clock jumping forward, steam rising from covered plates",
+      "text": "20 minutes later..."
     },
     {
-      "timing": "28-32s",
-      "speaker": "Old Baba",
-      "dialogue": "I don breathe seventy year free. Now una say make I pay? Na my pension una wan collect?",
-      "caption_text": "OLD BABA: 70 YEARS FREE BREATHING",
-      "sfx": "Walking stick tap, cough",
-      "image_keyword": "Elderly man with walking stick, hand on chest, shaking head",
-      "text": "I don breathe seventy year free. Now una say make I pay? Na my pension una wan collect?"
+      "timing": "0:28-0:32",
+      "speaker": "Tunde",
+      "dialogue": "Wahala! Goat meat pepper soup, pounded yam, chilled Maltina. Bisi, you do well o.",
+      "caption_text": "Feast revealed",
+      "sfx": "spoon hitting bowl",
+      "image_keyword": "man inhaling steam from bowl, eyes closed in bliss",
+      "text": "Wahala! Goat meat pepper soup, pounded yam, chilled Maltina. Bisi, you do well o."
     },
     {
-      "timing": "32-36s",
-      "speaker": "Bros Tunde",
-      "dialogue": "Oga Town Crier! Bring your calculator make we see! I don breathe like twenty times since you start talk!",
-      "caption_text": "CONFRONTATION: SHOW THE CALCULATOR",
-      "sfx": "Crowd gasps, danfo brake screech",
-      "image_keyword": "Conductor pointing at town crier, crowd forming circle",
-      "text": "Oga Town Crier! Bring your calculator make we see! I don breathe like twenty times since you start talk!"
+      "timing": "0:32-0:36",
+      "speaker": "Bisi",
+      "dialogue": "Chop well. You need strength for Monday.",
+      "caption_text": "Fuel for the grind",
+      "sfx": "chewing sounds",
+      "image_keyword": "woman watching him eat, arms folded, slight smirk",
+      "text": "Chop well. You need strength for Monday."
     },
     {
-      "timing": "36-40s",
-      "speaker": "Town Crier",
-      "dialogue": "Calculator? Na mental maths I dey use. You think government get budget for calculator?",
-      "caption_text": "TOWN CRIER: MENTAL MATHS ONLY",
-      "sfx": "Megaphone click, awkward silence",
-      "image_keyword": "Town crier tapping temple, smug grin, megaphone lowered",
-      "text": "Calculator? Na mental maths I dey use. You think government get budget for calculator?"
+      "timing": "0:36-0:40",
+      "speaker": "Tunde",
+      "dialogue": "Wait... where you see money for goat meat? And this yam look like the one I dey manage since January.",
+      "caption_text": "Math not mathing",
+      "sfx": "spoon freeze mid-air",
+      "image_keyword": "man squinting at bowl then at wife",
+      "text": "Wait... where you see money for goat meat? And this yam look like the one I dey manage since January."
     },
     {
-      "timing": "40-44s",
-      "speaker": "Mama Nkechi",
-      "dialogue": "Mental maths? For my ₦500 per breath? Bring POS make I tap! I no get cash!",
-      "caption_text": "MAMA NKECHI: POS ONLY, NO CASH",
-      "sfx": "POS beep, crowd murmurs agreement",
-      "image_keyword": "Pepper seller holding out phone with POS app open, determined",
-      "text": "Mental maths? For my ₦500 per breath? Bring POS make I tap! I no get cash!"
+      "timing": "0:40-0:44",
+      "speaker": "Bisi",
+      "dialogue": "I liquidate small asset. The PS5.",
+      "caption_text": "Asset liquidated",
+      "sfx": "cash register ka-ching",
+      "image_keyword": "woman tapping phone, bank app open",
+      "text": "I liquidate small asset. The PS5."
     },
     {
-      "timing": "44-48s",
-      "speaker": "LASEPA Officer",
-      "dialogue": "Hold am there! LASEPA never approve any breathing tax. Who be this one with megaphone?",
-      "caption_text": "LASEPA OFFICER ENTERS: NO SUCH TAX",
-      "sfx": "Siren chirp, radio static, authoritative footsteps",
-      "image_keyword": "LASEPA officer in reflective vest, badge visible, crowd parting",
-      "text": "Hold am there! LASEPA never approve any breathing tax. Who be this one with megaphone?"
+      "timing": "0:44-0:48",
+      "speaker": "Tunde",
+      "dialogue": "My PS5? The one I buy with first salary? You sell am?",
+      "caption_text": "Betrayal loading",
+      "sfx": "heartbreak violin sting",
+      "image_keyword": "man clutching chest, bowl forgotten",
+      "text": "My PS5? The one I buy with first salary? You sell am?"
     },
     {
-      "timing": "48-52s",
-      "speaker": "Town Crier",
-      "dialogue": "Oga Officer, na... na... na prank wey we dey do for TikTok! Content creation!",
-      "caption_text": "TOWN CRIER: 'TIKTOK PRANK' EXCUSE",
-      "sfx": "Nervous laughter, phone camera shutter",
-      "image_keyword": "Town crier sweating, hiding megaphone behind back, phone in other hand",
-      "text": "Oga Officer, na... na... na prank wey we dey do for TikTok! Content creation!"
+      "timing": "0:48-0:52",
+      "speaker": "Bisi",
+      "dialogue": "Relax. Investment portfolio diversification. You get job now — you go buy better one. ROI immediate.",
+      "caption_text": "Financial literacy",
+      "sfx": "calculator button clicks",
+      "image_keyword": "woman adjusting glasses, pointing at imaginary chart",
+      "text": "Relax. Investment portfolio diversification. You get job now — you go buy better one. ROI immediate."
     },
     {
-      "timing": "52-56s",
-      "speaker": "Area Boy Chairman",
-      "dialogue": "TikTok? For this Ojuelegba? Boys, carry am go 'office' make e explain better. Today na 'air tax' collection day.",
-      "caption_text": "CHAIRMAN: 'OFFICE' AWAITS",
-      "sfx": "Motorcycle revs, chain rattle, crowd cheers",
-      "image_keyword": "Area boy chairman in gold chain/shades, two boys grabbing town crier by arms",
-      "text": "TikTok? For this Ojuelegba? Boys, carry am go 'office' make e explain better. Today na 'air tax' collection day."
+      "timing": "0:52-0:56",
+      "speaker": "Tunde",
+      "dialogue": "ROI? You chop my ROI for pepper soup?",
+      "caption_text": "Eaten returns",
+      "sfx": "loud swallow",
+      "image_keyword": "man staring at empty bowl, realization dawning",
+      "text": "ROI? You chop my ROI for pepper soup?"
     },
     {
-      "timing": "56-60s",
-      "speaker": "Bros Tunde",
-      "dialogue": "See? Na so e easy. Free air don return. But make una no forget — conductor money still dey!",
-      "caption_text": "FREE AIR RESTORED. CONDUCTOR MONEY STAYS.",
-      "sfx": "Danfo horn melody, collective exhale, Afrobeats kick",
-      "image_keyword": "Conductor winking at camera, thumb up, bus park returning to chaos",
-      "text": "See? Na so e easy. Free air don return. But make una no forget — conductor money still dey!"
+      "timing": "0:56-1:00",
+      "speaker": "Bisi",
+      "dialogue": "Exactly. Asset converted to human capital. You're welcome. 📈",
+      "caption_text": "Portfolio optimized",
+      "sfx": "meme laugh track + cash sound",
+      "image_keyword": "woman winking at camera, thumb up, man background head in hands",
+      "text": "Exactly. Asset converted to human capital. You're welcome. 📈"
     }
   ],
-  "caption": "When FG 'approves' breathing tax at Ojuelegba 😂 Lagos no dey carry last! Who go pay ₦500 per breath? Tag your conductor 🚐💨",
+  "caption": "When your wife calls selling your PS5 'portfolio diversification' 📉😭 Marriage is a merger, not a charity. Tag your financial advisor.",
   "hashtags": [
-    "#LagosComedy",
-    "#NaijaSkit",
-    "#OjuelegbaChronicles",
+    "#NaijaComedy",
+    "#LagosLife",
+    "#MarriageHumor",
     "#PidginComedy",
-    "#AreaBoyLogic",
-    "#LagosLife"
+    "#InvestmentPortfolio",
+    "#FormatB"
   ]
 }
