@@ -1,179 +1,155 @@
 {
-  "title": "EFCC Raid at Mama Put",
-  "format": "A",
+  "title": "Compound Tax",
+  "format": "B",
   "duration_seconds": 60,
-  "hook": "EFCC don land! Everybody freeze!",
   "characters": [
-    "Town Crier (random customer)",
-    "Mama Nkechi (buka owner)",
-    "Bros J (suit guy)",
-    "Aunty Risi (wig seller)",
-    "Pastor Tunde",
-    "Student Boy",
-    "Area Boy",
-    "Officer Chidi (fake EFCC)",
-    "Real EFCC (voice only)"
+    "Mama Tobi",
+    "Brother Chidi"
   ],
+  "hook": "Mama Tobi asks Chidi to carry one small bag of rice upstairs. He agrees — and the 'help' never stops.",
   "scenes": [
     {
-      "scene": 1,
       "timing": "0-4s",
-      "speaker": "Town Crier",
-      "dialogue": "EFCC don land! Everybody freeze! Drop your phone, drop your spoon!",
-      "caption_text": "EFCC DON LAND! 😱",
-      "sfx": "crowd_gasp_loud",
-      "image_keyword": "man bursting into buka shouting, hands up, customers frozen mid-eat",
-      "text": "EFCC don land! Everybody freeze! Drop your phone, drop your spoon!"
+      "speaker": "Mama Tobi",
+      "dialogue": "Chidi! Chidi! Come help me carry this rice upstairs nau. Just one bag.",
+      "caption_text": "One small bag 😅",
+      "sfx": "Compound ambience — distant generator hum, chickens",
+      "image_keyword": "Lagos compound veranda, Mama Tobi at doorway holding rice bag",
+      "text": "Chidi! Chidi! Come help me carry this rice upstairs nau. Just one bag."
     },
     {
-      "scene": 2,
       "timing": "4-8s",
-      "speaker": "Mama Nkechi",
-      "dialogue": "Eh? Which kain EFCC? I never even cook today meat finish!",
-      "caption_text": "MAMA: I NO COOK MEAT 😭",
-      "sfx": "pot_clatter_panic",
-      "image_keyword": "mama nkechi holding giant wooden spoon, wide eyes, steam rising from pots",
-      "text": "Eh? Which kain EFCC? I never even cook today meat finish!"
+      "speaker": "Brother Chidi",
+      "dialogue": "Aunty Tobi, you know I no fit say no. Give me, I carry am fly.",
+      "caption_text": "Helpful neighbor mode 💪",
+      "sfx": "Footsteps on concrete stairs",
+      "image_keyword": "Brother Chidi smiling, taking rice bag from Mama Tobi",
+      "text": "Aunty Tobi, you know I no fit say no. Give me, I carry am fly."
     },
     {
-      "scene": 3,
       "timing": "8-12s",
-      "speaker": "Bros J",
-      "dialogue": "Officer sir, I just dey wash hand for here. No be me order goat meat.",
-      "caption_text": "BROS J: NA HAND I DEY WASH 🤷🏾‍♂️",
-      "sfx": "water_splash_nervous",
-      "image_keyword": "man in crisp suit at sink, soap on elbows, goat meat visible on table behind him",
-      "text": "Officer sir, I just dey wash hand for here. No be me order goat meat."
+      "speaker": "Brother Chidi",
+      "dialogue": "Ah, this bag heavy o. Na 'transport fare' I go take one cup from inside.",
+      "caption_text": "Transport fare? 🚌",
+      "sfx": "Rice pouring into plastic cup",
+      "image_keyword": "Chidi on stairs, scooping rice from torn bag into cup",
+      "text": "Ah, this bag heavy o. Na 'transport fare' I go take one cup from inside."
     },
     {
-      "scene": 4,
       "timing": "12-16s",
-      "speaker": "Aunty Risi",
-      "dialogue": "Me? I come buy pure water. The amala na for my neighbor pikin.",
-      "caption_text": "AUNTY RISI: PURE WATER ONLY 💧",
-      "sfx": "nylon_crinkle_loud",
-      "image_keyword": "woman with colorful wig, clutching pure water sachet, three wraps of amala hidden in bag",
-      "text": "Me? I come buy pure water. The amala na for my neighbor pikin."
+      "speaker": "Mama Tobi",
+      "dialogue": "Chidi! You don open the bag? Na loading fee be that?",
+      "caption_text": "Loading fee 📦",
+      "sfx": "Veranda gate creaks",
+      "image_keyword": "Mama Tobi hands on hips, watching Chidi descend",
+      "text": "Chidi! You don open the bag? Na loading fee be that?"
     },
     {
-      "scene": 5,
       "timing": "16-20s",
-      "speaker": "Pastor Tunde",
-      "dialogue": "I dey fast o! This ewedu na holy water for deliverance.",
-      "caption_text": "PASTOR: EWEDU = HOLY WATER 🙏",
-      "sfx": "amen_whisper",
-      "image_keyword": "pastor in collar, holding bowl of ewedu like chalice, serious face",
-      "text": "I dey fast o! This ewedu na holy water for deliverance."
+      "speaker": "Brother Chidi",
+      "dialogue": "Aunty, staircase tax separate. My knee dey pain me for this third floor.",
+      "caption_text": "Staircase tax 🦵",
+      "sfx": "Knee crack sound effect",
+      "image_keyword": "Chidi rubbing knee, holding second cup of rice",
+      "text": "Aunty, staircase tax separate. My knee dey pain me for this third floor."
     },
     {
-      "scene": 6,
       "timing": "20-24s",
-      "speaker": "Student Boy",
-      "dialogue": "Sir, I be 100 level. My pocket money no reach EFCC level.",
-      "caption_text": "STUDENT: 100 LEVEL BROKE 📚",
-      "sfx": "coins_jingle_sad",
-      "image_keyword": "thin student in backpack, empty plate, counting 50 naira notes on table",
-      "text": "Sir, I be 100 level. My pocket money no reach EFCC level."
+      "speaker": "Mama Tobi",
+      "dialogue": "Wait, the rice don reduce like this? You say evaporation?",
+      "caption_text": "Evaporation? 🌡️",
+      "sfx": "Wind whoosh",
+      "image_keyword": "Mama Tobi peering into half-empty bag, confused",
+      "text": "Wait, the rice don reduce like this? You say evaporation?"
     },
     {
-      "scene": 7,
       "timing": "24-28s",
-      "speaker": "Area Boy",
-      "dialogue": "Chairman, I dey provide security. Na me dey watch the gate.",
-      "caption_text": "AREA BOY: I BE SECURITY 💪",
-      "sfx": "agbero_laugh",
-      "image_keyword": "muscular guy in singlet, leaning on wall, chewing toothpick, fake ID card on chest",
-      "text": "Chairman, I dey provide security. Na me dey watch the gate."
+      "speaker": "Brother Chidi",
+      "dialogue": "Hot sun, steep stairs — evaporation real. But I fit help you recharge phone, save you wahala.",
+      "caption_text": "Helpful pivot 📱",
+      "sfx": "Phone notification ping",
+      "image_keyword": "Chidi holding out hand for phone, sly grin",
+      "text": "Hot sun, steep stairs — evaporation real. But I fit help you recharge phone, save you wahala."
     },
     {
-      "scene": 8,
       "timing": "28-32s",
-      "speaker": "Officer Chidi",
-      "dialogue": "Everybody shut up! I dey count three. One... two...",
-      "caption_text": "OFFICER: COUNTING THREE... 🔢",
-      "sfx": "boot_stomp_authority",
-      "image_keyword": "man in ill-fitting jacket, fake EFCC badge, pointing finger, sweat on forehead",
-      "text": "Everybody shut up! I dey count three. One... two..."
+      "speaker": "Mama Tobi",
+      "dialogue": "Hmm… okay o. Two thousand naira card dey my purse.",
+      "caption_text": "₦2,000 card 💳",
+      "sfx": "Purse zipper",
+      "image_keyword": "Mama Tobi handing recharge card to Chidi",
+      "text": "Hmm… okay o. Two thousand naira card dey my purse."
     },
     {
-      "scene": 9,
       "timing": "32-36s",
-      "speaker": "Mama Nkechi",
-      "dialogue": "Chidi! You never pay for last week semo! Carry your badge comot!",
-      "caption_text": "MAMA: PAY MY MONEY FIRST! 💰",
-      "sfx": "slap_sound_comedy",
-      "image_keyword": "mama nkechi slapping fake badge off chest, other hand on hip, officer recoiling",
-      "text": "Chidi! You never pay for last week semo! Carry your badge comot!"
+      "speaker": "Brother Chidi",
+      "dialogue": "Network charge dey o. Five hundred naira enter my pocket for 'signal boosting'.",
+      "caption_text": "Signal boosting 📶",
+      "sfx": "Cash rustle",
+      "image_keyword": "Chidi pocketing ₦500 note, typing on phone",
+      "text": "Network charge dey o. Five hundred naira enter my pocket for 'signal boosting'."
     },
     {
-      "scene": 10,
       "timing": "36-40s",
-      "speaker": "Officer Chidi",
-      "dialogue": "Mama Nkechi, na me be your brother! I come collect my change!",
-      "caption_text": "OFFICER: NA MY CHANGE! 😭",
-      "sfx": "family_drama_gasp",
-      "image_keyword": "officer removing fake badge, revealing plain shirt underneath, looking ashamed",
-      "text": "Mama Nkechi, na me be your brother! I come collect my change!"
+      "speaker": "Mama Tobi",
+      "dialogue": "Chidi! My generator no gree start since morning. You fit check am?",
+      "caption_text": "Gen wahala ⚡",
+      "sfx": "Generator sputter, fail",
+      "image_keyword": "Mama Tobi pointing to generator corner",
+      "text": "Chidi! My generator no gree start since morning. You fit check am?"
     },
     {
-      "scene": 11,
       "timing": "40-44s",
-      "speaker": "Bros J",
-      "dialogue": "So we dey panic for ordinary change? Bros, you wicked!",
-      "caption_text": "BROS J: ORDINARY CHANGE? 😡",
-      "sfx": "crowd_murmur_angry",
-      "image_keyword": "suit guy adjusting tie, pointing at officer, others gathering behind him",
-      "text": "So we dey panic for ordinary change? Bros, you wicked!"
+      "speaker": "Brother Chidi",
+      "dialogue": "Fuel surcharge apply. One litre from your jerrycan go solve am.",
+      "caption_text": "Fuel surcharge ⛽",
+      "sfx": "Jerrycan glug",
+      "image_keyword": "Chidi pouring fuel from Mama Tobi's jerrycan into generator",
+      "text": "Fuel surcharge apply. One litre from your jerrycan go solve am."
     },
     {
-      "scene": 12,
       "timing": "44-48s",
-      "speaker": "Aunty Risi",
-      "dialogue": "My wig don shift! You go pay for styling!",
-      "caption_text": "AUNTY RISI: MY WIG! 💇🏾‍♀️",
-      "sfx": "wig_adjust_struggle",
-      "image_keyword": "woman fixing displaced wig angrily, holding officer's collar",
-      "text": "My wig don shift! You go pay for styling!"
+      "speaker": "Mama Tobi",
+      "dialogue": "My son call from Canada! Chidi, help me pick am, my hand dey shake.",
+      "caption_text": "Canada call 🇨🇦",
+      "sfx": "Phone ringing — international tone",
+      "image_keyword": "Mama Tobi thrusting phone at Chidi, anxious",
+      "text": "My son call from Canada! Chidi, help me pick am, my hand dey shake."
     },
     {
-      "scene": 13,
       "timing": "48-52s",
-      "speaker": "Pastor Tunde",
-      "dialogue": "The devil is a liar! But Chidi, return the tithe you chop.",
-      "caption_text": "PASTOR: RETURN TITHE ⛪",
-      "sfx": "holy_ghost_fire",
-      "image_keyword": "pastor laying hands on officer's head, congregation style, officer kneeling",
-      "text": "The devil is a liar! But Chidi, return the tithe you chop."
+      "speaker": "Brother Chidi",
+      "dialogue": "International connection fee. Your last suya piece don settle am.",
+      "caption_text": "Suya tax 🍢",
+      "sfx": "Crunch bite",
+      "image_keyword": "Chidi eating suya wrapper, phone at ear",
+      "text": "International connection fee. Your last suya piece don settle am."
     },
     {
-      "scene": 14,
       "timing": "52-56s",
-      "speaker": "Area Boy",
-      "dialogue": "Chairman, since you be family, dash us one round amala.",
-      "caption_text": "AREA BOY: FAMILY DISCOUNT 🍽️",
-      "sfx": "agbero_cheer",
-      "image_keyword": "area boy rallying crowd, everyone chanting 'amala! amala!' officer sweating",
-      "text": "Chairman, since you be family, dash us one round amala."
+      "speaker": "Mama Tobi",
+      "dialogue": "Chidi, you don collect rice, airtime, fuel, suya — all for 'help'?",
+      "caption_text": "The realization 😳",
+      "sfx": "Dramatic pause",
+      "image_keyword": "Mama Tobi wide-eyed, Chidi wiping suya oil on shorts",
+      "text": "Chidi, you don collect rice, airtime, fuel, suya — all for 'help'?"
     },
     {
-      "scene": 15,
       "timing": "56-60s",
-      "speaker": "Real EFCC (voice)",
-      "dialogue": "*Phone rings* \"Chidi, where you dey? Office dey find you.\"",
-      "caption_text": "REAL EFCC DEY CALL... 📞💀",
-      "sfx": "phone_ring_dramatic + meme_laugh_outro",
-      "image_keyword": "officer's phone screen showing 'BOSS EFCC' caller ID, everyone laughing, freeze frame",
-      "text": "*Phone rings* \"Chidi, where you dey? Office dey find you.\""
+      "speaker": "Brother Chidi",
+      "dialogue": "Aunty Tobi, na Lagos we dey! Help no be free. *both burst out laughing*",
+      "caption_text": "Na Lagos we dey! 😂😂",
+      "sfx": "Laughter track + viral meme sound",
+      "image_keyword": "Both laughing hard, Chidi slapping Mama Tobi's shoulder",
+      "text": "Aunty Tobi, na Lagos we dey! Help no be free. *both burst out laughing*"
     }
   ],
-  "caption": "When fake EFCC enter buka but na Mama Nkechi pikin 😂 Lagos no dey carry last! Tag who go panic first.",
+  "caption": "When 'help' comes with hidden taxes 😂 Compound life no get part two. Tag your own Brother Chidi!",
   "hashtags": [
     "#NaijaComedy",
-    "#LagosSkit",
-    "#EFCCPrank",
-    "#MamaPutChronicles",
-    "#PidginComedy",
-    "#NaijaTikTok",
-    "#LagosLife"
+    "#LagosLife",
+    "#CompoundWahala",
+    "#PidginSkits",
+    "#NigerianHumor"
   ]
 }
